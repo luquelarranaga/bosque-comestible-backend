@@ -12,5 +12,9 @@
   "type": "commonjs",
   "devDependencies": {
     "jest": "^30.3.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.0",
+    "pg": "^8.20.0"
   }
 }
