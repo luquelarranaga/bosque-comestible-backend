@@ -1,5 +1,5 @@
-const db = require("../connection");
-const format = require("pg-format");
+import db from "../connection";
+import format from "pg-format";
 
 export const seed = async ({ plants }) => {
   await db.query("DROP TABLE IF EXISTS plants");
