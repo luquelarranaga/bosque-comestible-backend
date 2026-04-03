@@ -1,7 +1,7 @@
 const db = require("../connection");
 const format = require("pg-format");
 
-const seed = async ({ plants }) => {
+export const seed = async ({ plants }) => {
   await db.query("DROP TABLE IF EXISTS plants");
 
   await db.query(`
@@ -28,5 +28,3 @@ const insertPlantsQuery = format(
   ]),
 );
 await db.query(insertPlantsQuery);
-
-module.exports = seed;
