@@ -4,17 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "husky": "^9.1.7",
     "jest": "^30.3.0"
   },
   "dependencies": {
     "dotenv": "^17.4.0",
+    "express": "^5.2.1",
     "pg": "^8.20.0"
   }
 }
