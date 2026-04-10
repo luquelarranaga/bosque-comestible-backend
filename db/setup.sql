@@ -1,11 +1,5 @@
-DROP TABLE IF EXISTS plants;
+DROP DATABASE IF EXISTS bosque_comestible;
+CREATE DATABASE bosque_comestible;
 
-CREATE TABLE plants (
-    plant_id SERIAL PRIMARY KEY,
-    species VARCHAR NOT NULL,
-    date_planted TIMESTAMP,
-    coordinates VARCHAR,
-    body VARCHAR,
-    care VARCHAR,
-    img_url VARCHAR
-);
+DROP DATABASE IF EXISTS bosque_comestible_test;
+CREATE DATABASE bosque_comestible_test;
