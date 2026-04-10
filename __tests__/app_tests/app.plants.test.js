@@ -41,4 +41,13 @@ describe("/api/plants/", () => {
       });
     });
   });
+  describe("ERROR: INVALID METHOD 405", () => {
+    test("returns 405 status code and error message when invalid method used", () => {
+      const methods = ["put", "patch", "post", "delete"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)[method]("/api/plants/").expect(405);
+        expect(body.msg).toBe("Method not allowed");
+      });
+    });
+  });
 });
