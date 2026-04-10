@@ -1,4 +1,4 @@
-export default [
+module.exports = [
   {
     species: "Lavender",
     date_planted: new Date(1609459200000),
