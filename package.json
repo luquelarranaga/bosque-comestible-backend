@@ -4,20 +4,32 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "setup-dbs": "psql -f ./db/setup.sql",
+    "seed-prod": "NODE_ENV=production npm run seed",
+    "seed": "node ./db/seeds/run-seed.js",
+    "test": "jest --runInBand --detectOpenHandles",
     "prepare": "husky"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
+  "type": "commonjs",
   "devDependencies": {
     "husky": "^9.1.7",
-    "jest": "^30.3.0"
+    "jest": "^30.3.0",
+    "jest-extended": "^7.0.0",
+    "supertest": "^7.2.2"
   },
   "dependencies": {
+    "cors": "^2.8.6",
     "dotenv": "^17.4.0",
     "express": "^5.2.1",
-    "pg": "^8.20.0"
+    "pg": "^8.20.0",
+    "pg-format": "^1.0.4"
+  },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "jest-extended/all"
+    ]
   }
 }
