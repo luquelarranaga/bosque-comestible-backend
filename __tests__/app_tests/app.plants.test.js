@@ -39,6 +39,15 @@ describe("/api/plants/", () => {
         expect(typeof plant.img_url).toBe("string");
       });
     });
+    test("plants are filtered by species specified in query", async () => {
+      const { body } = await request(app)
+        .get("/api/plants?species=lavender")
+        .expect(200);
+      const { plants } = body;
+      plants.forEach((plant) => {
+        expect(plant.species).toBe("Lavender");
+      });
+    });
   });
   describe("ERROR: INVALID METHOD 405", () => {
     test("returns 405 status code and error message when invalid method used", () => {
