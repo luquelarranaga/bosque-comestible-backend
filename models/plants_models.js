@@ -1,6 +1,7 @@
 const db = require("../db/connection");
 
 const fetchAllPlants = async (species) => {
+  console.log("species in model !! >> ", species);
   if (species) {
     const result = await db.query(`SELECT * FROM plants WHERE species = $1`, [
       species,
