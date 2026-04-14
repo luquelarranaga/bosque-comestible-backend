@@ -63,6 +63,14 @@ describe("/api/plants/", () => {
         expect(plant.species).toBe("lavender");
       });
     });
+    test("when species queried, plants are ordered by date_planted", async () => {
+      const { body } = await request(app)
+        .get("/api/plants?species=lavender")
+        .expect(200);
+      const { plants } = body;
+      const datePlanted = plants.map((plant) => plant.date_planted);
+      expect(datePlanted).toBeSorted({ descending: true });
+    });
   });
   describe("ERROR: INVALID METHOD 405", () => {
     test("returns 405 status code and error message when invalid method used", () => {
