@@ -24,7 +24,6 @@ describe("/api/plants/", () => {
   describe("GET 200", () => {
     test("responds with an object with a key of plants with a value of an array of objects", async () => {
       const { body } = await request(app).get("/api/plants/").expect(200);
-      console.log("body>>>", body);
       expect(body).toBeObject();
       expect(body.plants).toBeArray();
     });
@@ -49,5 +48,12 @@ describe("/api/plants/", () => {
         expect(body.msg).toBe("Method not allowed");
       });
     });
+  });
+});
+
+describe("/api/invalid-path", () => {
+  test("Invalid path returns 400 error", async () => {
+    const { body } = await request(app).get("/api/invalid-path").expect(400);
+    expect(body.msg).toBe("Bad request");
   });
 });
