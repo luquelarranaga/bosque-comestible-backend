@@ -8,7 +8,9 @@ app.use(express.json());
 
 app.use("/api/plants", plantsRouter);
 
-module.exports = app;
+app.all("/*path", (req, res, next) => {
+  res.status(400).send({ msg: "Bad request" });
+});
 
 app.use((err, req, res, next) => {
   if (err instanceof NotFoundError) {
@@ -29,3 +31,5 @@ app.use((err, req, res, next) => {
 app.use((err, req, res, next) => {
   res.status(500).send({ msg: "Internal Server Error" });
 });
+
+module.exports = app;
