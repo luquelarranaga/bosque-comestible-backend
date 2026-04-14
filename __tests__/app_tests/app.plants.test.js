@@ -66,6 +66,14 @@ describe("/api/plants/", () => {
       expect(body.msg).toBe("Invalid species query");
     });
   });
+  describe("ERROR: BAD REQUEST 404", () => {
+    test("returns 404 error when valid species is queried but not found in the database", async () => {
+      const { body } = await request(app)
+        .get("/api/plants?species=cassava")
+        .expect(404);
+      expect(body.msg).toBe("Species not found");
+    });
+  });
 });
 
 describe("/api/invalid-path", () => {
