@@ -72,9 +72,29 @@ describe("/api/plants/", () => {
       expect(datePlanted).toBeSorted({ descending: true });
     });
   });
+  describe("POST 201", () => {
+    test("responds with a single object", async () => {
+      const { body } = await request(app)
+        .post("/api/plants/")
+        .send({
+          species: "lavender",
+          date_planted: new Date(1609469200000),
+          coordinates: "51.5474,-0.1300",
+          body: "new plant",
+          care: "this is how you care for me",
+          img_url:
+            "https://images.pexels.com/photos/207518/pexels-photo-207518.jpeg?w=700&h=700",
+        })
+        .expect(201);
+      const { plant } = body;
+      console.log("plant in test >>> ", plant);
+      expect(plant).toBeObject();
+      expect(plant).not.toBeArray();
+    });
+  });
   describe("ERROR: INVALID METHOD 405", () => {
     test("returns 405 status code and error message when invalid method used", () => {
-      const methods = ["put", "patch", "post", "delete"];
+      const methods = ["put", "patch", "delete"];
       methods.forEach(async (method) => {
         const { body } = await request(app)[method]("/api/plants/").expect(405);
         expect(body.msg).toBe("Method not allowed");
