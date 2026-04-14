@@ -39,11 +39,20 @@ describe("/api/plants/", () => {
         expect(typeof plant.img_url).toBe("string");
       });
     });
-    test("when no species specified, plants are ordered by species in alphabetical order", async () => {
+    test("plants are ordered by species in alphabetical order", async () => {
       const { body } = await request(app).get("/api/plants/").expect(200);
       const { plants } = body;
       const species = plants.map((plant) => plant.species);
       expect(species).toBeSorted();
+    });
+    test("each plant species are ordered by date_planted", async () => {
+      const { body } = await request(app).get("/api/plants/").expect(200);
+      const { plants } = body;
+      const lavenderPlants = plants.filter(
+        (plant) => plant.species === "lavender",
+      );
+      const datePlanted = lavenderPlants.map((plant) => plant.date_planted);
+      expect(datePlanted).toBeSorted({ descending: true });
     });
     test("plants are filtered by species specified in query", async () => {
       const { body } = await request(app)
