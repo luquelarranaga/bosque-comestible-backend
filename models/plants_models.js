@@ -8,7 +8,9 @@ const fetchAllPlants = async (species) => {
     const { rows } = result;
     return rows;
   } else {
-    const result = await db.query("SELECT * FROM plants ORDER BY species");
+    const result = await db.query(
+      "SELECT * FROM plants ORDER BY species, date_planted DESC",
+    );
     const { rows } = result;
     return rows;
   }
