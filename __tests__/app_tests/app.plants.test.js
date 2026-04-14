@@ -45,7 +45,7 @@ describe("/api/plants/", () => {
         .expect(200);
       const { plants } = body;
       plants.forEach((plant) => {
-        expect(plant.species).toBe("Lavender");
+        expect(plant.species).toBe("lavender");
       });
     });
   });
