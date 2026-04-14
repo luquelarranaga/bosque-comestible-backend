@@ -1,8 +1,7 @@
 const fetchAllPlants = require("../models/plants_models");
 
-const serviceAllPlants = async () => {
-  console.log("in service");
-  return await fetchAllPlants();
+const serviceAllPlants = async (species) => {
+  return await fetchAllPlants(species);
 };
 
 module.exports = serviceAllPlants;
