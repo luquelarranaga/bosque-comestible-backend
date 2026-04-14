@@ -58,6 +58,14 @@ describe("/api/plants/", () => {
       });
     });
   });
+  describe("ERROR: INVALID INPUT 400", () => {
+    test("returns 400 error when invalid species is queried", async () => {
+      const { body } = await request(app)
+        .get("/api/plants?species=123")
+        .expect(400);
+      expect(body.msg).toBe("Invalid species query");
+    });
+  });
 });
 
 describe("/api/invalid-path", () => {
