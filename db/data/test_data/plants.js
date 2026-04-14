@@ -9,6 +9,24 @@ module.exports = [
       "https://images.pexels.com/photos/207518/pexels-photo-207518.jpeg?w=700&h=700",
   },
   {
+    species: "lavender",
+    date_planted: new Date(1577836800000),
+    coordinates: "51.5074,-0.1278",
+    body: "A fragrant perennial shrub known for its calming properties and beautiful purple flowers.",
+    care: "Water sparingly, ensure full sun and well-drained soil. Trim after flowering.",
+    img_url:
+      "https://images.pexels.com/photos/207518/pexels-photo-207518.jpeg?w=700&h=700",
+  },
+  {
+    species: "lavender",
+    date_planted: new Date(1625000000000),
+    coordinates: "51.5074,-0.1278",
+    body: "A fragrant perennial shrub known for its calming properties and beautiful purple flowers.",
+    care: "Water sparingly, ensure full sun and well-drained soil. Trim after flowering.",
+    img_url:
+      "https://images.pexels.com/photos/207518/pexels-photo-207518.jpeg?w=700&h=700",
+  },
+  {
     species: "oak tree",
     date_planted: new Date(1577836800000),
     coordinates: "53.4808,-2.2426",
