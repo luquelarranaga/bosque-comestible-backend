@@ -39,6 +39,12 @@ describe("/api/plants/", () => {
         expect(typeof plant.img_url).toBe("string");
       });
     });
+    test("when no species specified, plants are ordered by species in alphabetical order", async () => {
+      const { body } = await request(app).get("/api/plants/").expect(200);
+      const { plants } = body;
+      const species = plants.map((plant) => plant.species);
+      expect(species).toBeSorted();
+    });
     test("plants are filtered by species specified in query", async () => {
       const { body } = await request(app)
         .get("/api/plants?species=lavender")
