@@ -17,4 +17,23 @@ const fetchAllPlants = async (species) => {
   }
 };
 
-module.exports = fetchAllPlants;
+const insertPlant = async (newPlant) => {
+  const result = await db.query(
+    `INSERT INTO plants (species, date_planted, coordinates, body, care, img_url)
+    VALUES ($1, $2, $3, $4, $5, $6)
+    RETURNING *
+    `,
+    [
+      newPlant.species,
+      newPlant.date_planted,
+      newPlant.coordinates,
+      newPlant.body,
+      newPlant.care,
+      newPlant.img_url,
+    ],
+  );
+  const { rows } = result;
+  return rows[0];
+};
+
+module.exports = { fetchAllPlants, insertPlant };

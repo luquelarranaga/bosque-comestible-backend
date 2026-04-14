@@ -1,4 +1,4 @@
-const fetchAllPlants = require("../models/plants_models");
+const { fetchAllPlants, insertPlant } = require("../models/plants_models");
 const isSpeciesValid = require("../utils/isSpeciesValid");
 const InvalidInputError = require("../errors/InvalidInputError");
 const doesSpeciesExist = require("../utils/doesSpeciesExist");
@@ -20,4 +20,9 @@ const serviceAllPlants = async (query) => {
   return await fetchAllPlants(species);
 };
 
-module.exports = serviceAllPlants;
+const servicePostPlant = async (newPlant) => {
+  const plant = await insertPlant(newPlant);
+  return plant;
+};
+
+module.exports = { serviceAllPlants, servicePostPlant };

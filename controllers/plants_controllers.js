@@ -1,4 +1,7 @@
-const serviceAllPlants = require("../services/plants_services");
+const {
+  serviceAllPlants,
+  servicePostPlant,
+} = require("../services/plants_services");
 
 const getAllPlants = async (req, res, next) => {
   const query = req.query;
@@ -10,4 +13,14 @@ const getAllPlants = async (req, res, next) => {
   }
 };
 
-module.exports = getAllPlants;
+const postPlant = async (req, res, next) => {
+  const newPlant = req.body;
+  try {
+    const plant = await servicePostPlant(newPlant);
+    return res.status(201).send({ plant: plant });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { getAllPlants, postPlant };
