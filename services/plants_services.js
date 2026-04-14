@@ -14,7 +14,6 @@ const serviceAllPlants = async (query) => {
 
   const speciesExists = await doesSpeciesExist(species);
   if (speciesExists === false) {
-    console.log("in error");
     throw new NotFoundError("Species not found");
   }
 
