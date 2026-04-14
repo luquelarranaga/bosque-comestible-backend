@@ -1,13 +1,12 @@
 const serviceAllPlants = require("../services/plants_services");
 
-const getAllPlants = async (req, res) => {
-  const species = req.query.species;
-  console.log("query>>>", species);
+const getAllPlants = async (req, res, next) => {
+  const query = req.query;
   try {
-    const plants = await serviceAllPlants(species);
+    const plants = await serviceAllPlants(query);
     return res.status(200).send({ plants: plants });
   } catch (err) {
-    return err;
+    next(err);
   }
 };
 

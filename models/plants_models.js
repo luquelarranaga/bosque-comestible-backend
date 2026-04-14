@@ -6,7 +6,6 @@ const fetchAllPlants = async (species) => {
       species,
     ]);
     const { rows } = result;
-    console.log("rows with query>>>", rows);
     return rows;
   } else {
     const result = await db.query("SELECT * FROM plants");
