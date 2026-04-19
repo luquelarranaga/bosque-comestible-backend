@@ -87,9 +87,29 @@ describe("/api/plants/", () => {
         })
         .expect(201);
       const { plant } = body;
-      console.log("plant in test >>> ", plant);
       expect(plant).toBeObject();
       expect(plant).not.toBeArray();
+    });
+    test("object contains correct key properties", async () => {
+      const { body } = await request(app)
+        .post("/api/plants/")
+        .send({
+          species: "lavender",
+          date_planted: new Date(1609469200000),
+          coordinates: "51.5474,-0.1300",
+          body: "new plant",
+          care: "this is how you care for me",
+          img_url:
+            "https://images.pexels.com/photos/207518/pexels-photo-207518.jpeg?w=700&h=700",
+        })
+        .expect(201);
+      const { plant } = body;
+      expect(typeof plant.species).toBe("string");
+      expect(typeof plant.date_planted).toBe("string");
+      expect(typeof plant.coordinates).toBe("string");
+      expect(typeof plant.body).toBe("string");
+      expect(typeof plant.care).toBe("string");
+      expect(typeof plant.img_url).toBe("string");
     });
   });
   describe("ERROR: INVALID METHOD 405", () => {
