@@ -145,13 +145,22 @@ describe("/api/plants/:plant_id", () => {
       const { body } = await request(app)
         .patch("/api/plants/1")
         .send({
-          care: "water twice a week",
+          body: "leaves are looking yellow",
         })
         .expect(200);
 
       const { plant } = body;
       expect(plant).toBeObject();
       expect(plant).not.toBeArray();
+    });
+    test("when one field updated, the updated field reflects the sent data", async () => {
+      const updatedData = { body: "leaves are looking yellow" };
+      const { body } = await request(app)
+        .patch("/api/plants/3")
+        .send(updatedData)
+        .expect(200);
+      const { plant } = body;
+      expect(plant.body).toBe("leaves are looking yellow");
     });
   });
 });
