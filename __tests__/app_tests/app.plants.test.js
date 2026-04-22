@@ -139,6 +139,23 @@ describe("/api/plants/", () => {
   });
 });
 
+describe("/api/plants/:plant_id", () => {
+  describe("PATCH 200", () => {
+    test("responds with the updated plant object", async () => {
+      const { body } = await request(app)
+        .patch("/api/plants/1")
+        .send({
+          care: "water twice a week",
+        })
+        .expect(200);
+
+      const { plant } = body;
+      expect(plant).toBeObject();
+      expect(plant).not.toBeArray();
+    });
+  });
+});
+
 describe("/api/invalid-path", () => {
   test("Invalid path returns 400 error", async () => {
     const { body } = await request(app).get("/api/invalid-path").expect(400);
