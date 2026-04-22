@@ -140,6 +140,25 @@ describe("/api/plants/", () => {
 });
 
 describe("/api/plants/:plant_id", () => {
+  describe("GET 200", () => {
+    test("responds with a single object", async () => {
+      const { body } = await request(app).get("/api/plants/1").expect(200);
+      expect(body).toBeObject();
+      expect(body.plants).not.toBeArray();
+    });
+    test("plant object contains correct keys", async () => {
+      const { body } = await request(app).get("/api/plants/1").expect(200);
+      console.log("body >> ", body);
+      const { plant } = body;
+
+      expect(typeof plant.species).toBe("string");
+      expect(typeof plant.date_planted).toBe("string");
+      expect(typeof plant.coordinates).toBe("string");
+      expect(typeof plant.body).toBe("string");
+      expect(typeof plant.care).toBe("string");
+      expect(typeof plant.img_url).toBe("string");
+    });
+  });
   describe("PATCH 200", () => {
     test("responds with the updated plant object", async () => {
       const { body } = await request(app)
