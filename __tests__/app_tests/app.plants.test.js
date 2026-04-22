@@ -148,7 +148,6 @@ describe("/api/plants/:plant_id", () => {
     });
     test("plant object contains correct keys", async () => {
       const { body } = await request(app).get("/api/plants/1").expect(200);
-      console.log("body >> ", body);
       const { plant } = body;
 
       expect(typeof plant.species).toBe("string");
@@ -211,15 +210,39 @@ describe("/api/plants/:plant_id", () => {
       expect(plant.img_url).toBe(updatedData.img_url);
     });
   });
+  describe("DELETE 204", () => {
+    test("responds with no content", async () => {
+      const { body } = await request(app).delete("/api/plants/1").expect(204);
+      expect(body).toEqual({});
+    });
+  });
   describe("ERROR: INVALID METHOD 405", () => {
-    test("returns 405 status code and error message when invalid method used", () => {
-      const methods = ["put", "post", "delete"];
+    test("returns 405 status code and error message when invalid method used", async () => {
+      const methods = ["put", "post"];
       methods.forEach(async (method) => {
         const { body } = await request(app)
           [method]("/api/plants/:plant_id/")
           .expect(405);
         expect(body.msg).toBe("Method not allowed");
       });
+    });
+  });
+  describe("ERROR: INVALID INPUT 400", () => {
+    test("returns 400 status code and error message when getting with invalid plant id", async () => {
+      const { body } = await request(app).get("/api/plants/userid").expect(400);
+      expect(body.msg).toBe("Invalid plant id");
+    });
+    test("returns 400 status code and error message when patching with invalid plant id", async () => {
+      const { body } = await request(app)
+        .patch("/api/plants/userid")
+        .expect(400);
+      expect(body.msg).toBe("Invalid plant id");
+    });
+    test("returns 400 status code and error message when deleting with invalid plant id", async () => {
+      const { body } = await request(app)
+        .delete("/api/plants/userid")
+        .expect(400);
+      expect(body.msg).toBe("Invalid plant id");
     });
   });
 });
