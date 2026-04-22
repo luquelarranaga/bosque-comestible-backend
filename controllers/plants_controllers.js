@@ -1,6 +1,7 @@
 const {
   serviceAllPlants,
   servicePostPlant,
+  servicePatchPlant,
 } = require("../services/plants_services");
 
 const getAllPlants = async (req, res, next) => {
@@ -23,4 +24,9 @@ const postPlant = async (req, res, next) => {
   }
 };
 
-module.exports = { getAllPlants, postPlant };
+const patchPlant = async (req, res, next) => {
+  const { plant_id } = req.params;
+  const plant = await servicePatchPlant(plant_id);
+  return res.status(200).send({ plant: plant });
+};
+module.exports = { getAllPlants, postPlant, patchPlant };

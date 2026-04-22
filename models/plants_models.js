@@ -36,4 +36,12 @@ const insertPlant = async (newPlant) => {
   return rows[0];
 };
 
-module.exports = { fetchAllPlants, insertPlant };
+const updatePlant = async (plant_id) => {
+  const result = await db.query(`SELECT * FROM plants WHERE plant_id = $1`, [
+    plant_id,
+  ]);
+  const { rows } = result;
+  return rows[0];
+};
+
+module.exports = { fetchAllPlants, insertPlant, updatePlant };
