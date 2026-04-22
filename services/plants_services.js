@@ -9,6 +9,7 @@ const isSpeciesValid = require("../utils/isSpeciesValid");
 const InvalidInputError = require("../errors/InvalidInputError");
 const doesSpeciesExist = require("../utils/doesSpeciesExist");
 const NotFoundError = require("../errors/NotFoundError");
+const doesPlantIdExist = require("../utils/doesPlantIdExist");
 
 const serviceAllPlants = async (query) => {
   let { species = null } = query;
@@ -36,6 +37,12 @@ const serviceGetPlant = async (plant_id) => {
   if (regex.test(plant_id) === false) {
     throw new InvalidInputError("Invalid plant id");
   }
+
+  const plantIdValidity = await doesPlantIdExist(plant_id);
+  if (plantIdValidity === false) {
+    throw new NotFoundError("Plant id not found");
+  }
+
   const plant = await fetchPlant(plant_id);
   return plant;
 };
@@ -46,6 +53,11 @@ const servicePatchPlant = async (plant_id, updatedInfo) => {
     throw new InvalidInputError("Invalid plant id");
   }
 
+  const plantIdValidity = await doesPlantIdExist(plant_id);
+  if (plantIdValidity === false) {
+    throw new NotFoundError("Plant id not found");
+  }
+
   const plant = await updatePlant(plant_id, updatedInfo);
   return plant;
 };
@@ -54,6 +66,11 @@ const serviceDeletePlant = async (plant_id) => {
   const regex = /\d/;
   if (regex.test(plant_id) === false) {
     throw new InvalidInputError("Invalid plant id");
+  }
+
+  const plantIdValidity = await doesPlantIdExist(plant_id);
+  if (plantIdValidity === false) {
+    throw new NotFoundError("Plant id not found");
   }
 
   const rowCount = await deletePlant(plant_id);
