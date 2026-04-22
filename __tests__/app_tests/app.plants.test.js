@@ -162,6 +162,20 @@ describe("/api/plants/:plant_id", () => {
       const { plant } = body;
       expect(plant.body).toBe("leaves are looking yellow");
     });
+    test("when multiple fields are updated, the updated fields reflect the sent data", async () => {
+      const updatedData = {
+        body: "leaves are looking yellow",
+        img_url:
+          "https://images.pexels.com/photos/1466869/pexels-photo-1466869.jpeg?w=700&h=700",
+      };
+      const { body } = await request(app)
+        .patch("/api/plants/3")
+        .send(updatedData)
+        .expect(200);
+      const { plant } = body;
+      expect(plant.body).toBe(updatedData.body);
+      expect(plant.img_url).toBe(updatedData.img_url);
+    });
   });
 });
 
