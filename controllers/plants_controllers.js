@@ -28,22 +28,37 @@ const postPlant = async (req, res, next) => {
 
 const getPlant = async (req, res, next) => {
   const { plant_id } = req.params;
-  const plant = await serviceGetPlant(plant_id);
-  return res.status(200).send({ plant: plant });
+
+  try {
+    const plant = await serviceGetPlant(plant_id);
+    return res.status(200).send({ plant: plant });
+  } catch (err) {
+    next(err);
+  }
 };
 
 const patchPlant = async (req, res, next) => {
   const { plant_id } = req.params;
   const updatedInfo = req.body;
-  const plant = await servicePatchPlant(plant_id, updatedInfo);
-  return res.status(200).send({ plant: plant });
+
+  try {
+    const plant = await servicePatchPlant(plant_id, updatedInfo);
+    return res.status(200).send({ plant: plant });
+  } catch (err) {
+    next(err);
+  }
 };
 
 const removePlant = async (req, res, next) => {
   const { plant_id } = req.params;
-  const rowCount = await serviceDeletePlant(plant_id);
-  if (rowCount === 1) {
-    return res.status(204).send();
+
+  try {
+    const rowCount = await serviceDeletePlant(plant_id);
+    if (rowCount === 1) {
+      return res.status(204).send();
+    }
+  } catch (err) {
+    next(err);
   }
 };
 module.exports = { getAllPlants, postPlant, getPlant, patchPlant, removePlant };
