@@ -235,6 +235,9 @@ describe("/api/plants/:plant_id", () => {
     test("returns 400 status code and error message when patching with invalid plant id", async () => {
       const { body } = await request(app)
         .patch("/api/plants/userid")
+        .send({
+          body: "leaves are looking yellow",
+        })
         .expect(400);
       expect(body.msg).toBe("Invalid plant id");
     });
@@ -243,6 +246,27 @@ describe("/api/plants/:plant_id", () => {
         .delete("/api/plants/userid")
         .expect(400);
       expect(body.msg).toBe("Invalid plant id");
+    });
+  });
+  describe("ERROR: NOT FOUND 404", () => {
+    test("returns 404 status code and error message when getting with invalid plant id", async () => {
+      const { body } = await request(app).get("/api/plants/99999").expect(404);
+      expect(body.msg).toBe("Plant id not found");
+    });
+    test("returns 404 status code and error message when patching with invalid plant id", async () => {
+      const { body } = await request(app)
+        .patch("/api/plants/99999")
+        .send({
+          body: "leaves are looking yellow",
+        })
+        .expect(404);
+      expect(body.msg).toBe("Plant id not found");
+    });
+    test("returns 404 status code and error message when deleting with invalid plant id", async () => {
+      const { body } = await request(app)
+        .delete("/api/plants/99999")
+        .expect(404);
+      expect(body.msg).toBe("Plant id not found");
     });
   });
 });
