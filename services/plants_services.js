@@ -1,6 +1,7 @@
 const {
   fetchAllPlants,
   insertPlant,
+  fetchPlant,
   updatePlant,
 } = require("../models/plants_models");
 const isSpeciesValid = require("../utils/isSpeciesValid");
@@ -29,9 +30,19 @@ const servicePostPlant = async (newPlant) => {
   return plant;
 };
 
+const serviceGetPlant = async (plant_id) => {
+  const plant = await fetchPlant(plant_id);
+  return plant;
+};
+
 const servicePatchPlant = async (plant_id, updatedInfo) => {
   const plant = await updatePlant(plant_id, updatedInfo);
   return plant;
 };
 
-module.exports = { serviceAllPlants, servicePostPlant, servicePatchPlant };
+module.exports = {
+  serviceAllPlants,
+  servicePostPlant,
+  serviceGetPlant,
+  servicePatchPlant,
+};

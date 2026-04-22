@@ -37,6 +37,14 @@ const insertPlant = async (newPlant) => {
   return rows[0];
 };
 
+const fetchPlant = async (plant_id) => {
+  const result = await db.query(`SELECT * FROM plants WHERE plant_id = $1`, [
+    plant_id,
+  ]);
+  const { rows } = result;
+  return rows[0];
+};
+
 const updatePlant = async (plant_id, updatedInfo) => {
   const columns = Object.keys(updatedInfo);
   const values = Object.values(updatedInfo);
@@ -57,4 +65,4 @@ const updatePlant = async (plant_id, updatedInfo) => {
   return rows[0];
 };
 
-module.exports = { fetchAllPlants, insertPlant, updatePlant };
+module.exports = { fetchAllPlants, insertPlant, fetchPlant, updatePlant };
