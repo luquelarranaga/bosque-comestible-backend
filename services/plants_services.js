@@ -3,6 +3,7 @@ const {
   insertPlant,
   fetchPlant,
   updatePlant,
+  deletePlant,
 } = require("../models/plants_models");
 const isSpeciesValid = require("../utils/isSpeciesValid");
 const InvalidInputError = require("../errors/InvalidInputError");
@@ -31,13 +32,32 @@ const servicePostPlant = async (newPlant) => {
 };
 
 const serviceGetPlant = async (plant_id) => {
+  const regex = /\d/;
+  if (regex.test(plant_id) === false) {
+    throw new InvalidInputError("Invalid plant id");
+  }
   const plant = await fetchPlant(plant_id);
   return plant;
 };
 
 const servicePatchPlant = async (plant_id, updatedInfo) => {
+  const regex = /\d/;
+  if (regex.test(plant_id) === false) {
+    throw new InvalidInputError("Invalid plant id");
+  }
+
   const plant = await updatePlant(plant_id, updatedInfo);
   return plant;
+};
+
+const serviceDeletePlant = async (plant_id) => {
+  const regex = /\d/;
+  if (regex.test(plant_id) === false) {
+    throw new InvalidInputError("Invalid plant id");
+  }
+
+  const rowCount = await deletePlant(plant_id);
+  return rowCount;
 };
 
 module.exports = {
@@ -45,4 +65,5 @@ module.exports = {
   servicePostPlant,
   serviceGetPlant,
   servicePatchPlant,
+  serviceDeletePlant,
 };

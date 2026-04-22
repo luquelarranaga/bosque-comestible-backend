@@ -3,6 +3,7 @@ const {
   servicePostPlant,
   serviceGetPlant,
   servicePatchPlant,
+  serviceDeletePlant,
 } = require("../services/plants_services");
 
 const getAllPlants = async (req, res, next) => {
@@ -37,4 +38,12 @@ const patchPlant = async (req, res, next) => {
   const plant = await servicePatchPlant(plant_id, updatedInfo);
   return res.status(200).send({ plant: plant });
 };
-module.exports = { getAllPlants, postPlant, getPlant, patchPlant };
+
+const removePlant = async (req, res, next) => {
+  const { plant_id } = req.params;
+  const rowCount = await serviceDeletePlant(plant_id);
+  if (rowCount === 1) {
+    return res.status(204).send();
+  }
+};
+module.exports = { getAllPlants, postPlant, getPlant, patchPlant, removePlant };

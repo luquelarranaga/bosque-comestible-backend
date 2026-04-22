@@ -65,4 +65,19 @@ const updatePlant = async (plant_id, updatedInfo) => {
   return rows[0];
 };
 
-module.exports = { fetchAllPlants, insertPlant, fetchPlant, updatePlant };
+const deletePlant = async (plant_id) => {
+  const result = await db.query(
+    `DELETE FROM plants WHERE plant_id = $1 RETURNING *`,
+    [plant_id],
+  );
+  const { rowCount } = result;
+  return rowCount;
+};
+
+module.exports = {
+  fetchAllPlants,
+  insertPlant,
+  fetchPlant,
+  updatePlant,
+  deletePlant,
+};
