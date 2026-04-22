@@ -153,6 +153,21 @@ describe("/api/plants/:plant_id", () => {
       expect(plant).toBeObject();
       expect(plant).not.toBeArray();
     });
+    test("responds with object with correct shape", async () => {
+      const { body } = await request(app)
+        .patch("/api/plants/1")
+        .send({
+          body: "leaves are looking yellow",
+        })
+        .expect(200);
+      const { plant } = body;
+      expect(typeof plant.species).toBe("string");
+      expect(typeof plant.date_planted).toBe("string");
+      expect(typeof plant.coordinates).toBe("string");
+      expect(typeof plant.body).toBe("string");
+      expect(typeof plant.care).toBe("string");
+      expect(typeof plant.img_url).toBe("string");
+    });
     test("when one field updated, the updated field reflects the sent data", async () => {
       const updatedData = { body: "leaves are looking yellow" };
       const { body } = await request(app)
