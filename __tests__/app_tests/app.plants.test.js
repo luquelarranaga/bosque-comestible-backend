@@ -192,6 +192,17 @@ describe("/api/plants/:plant_id", () => {
       expect(plant.img_url).toBe(updatedData.img_url);
     });
   });
+  describe("ERROR: INVALID METHOD 405", () => {
+    test("returns 405 status code and error message when invalid method used", () => {
+      const methods = ["put", "post", "delete"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)
+          [method]("/api/plants/:plant_id/")
+          .expect(405);
+        expect(body.msg).toBe("Method not allowed");
+      });
+    });
+  });
 });
 
 describe("/api/invalid-path", () => {
