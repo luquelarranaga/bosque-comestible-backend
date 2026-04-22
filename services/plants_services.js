@@ -29,8 +29,8 @@ const servicePostPlant = async (newPlant) => {
   return plant;
 };
 
-const servicePatchPlant = async (plant_id) => {
-  const plant = await updatePlant(plant_id);
+const servicePatchPlant = async (plant_id, updatedInfo) => {
+  const plant = await updatePlant(plant_id, updatedInfo);
   return plant;
 };
 

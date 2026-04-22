@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const format = require("pg-format");
 
 const fetchAllPlants = async (species) => {
   if (species) {
@@ -36,10 +37,22 @@ const insertPlant = async (newPlant) => {
   return rows[0];
 };
 
-const updatePlant = async (plant_id) => {
-  const result = await db.query(`SELECT * FROM plants WHERE plant_id = $1`, [
-    plant_id,
-  ]);
+const updatePlant = async (plant_id, updatedInfo) => {
+  const columns = Object.keys(updatedInfo);
+  const values = Object.values(updatedInfo);
+
+  let counter = -1;
+  const setArray = columns.map((column) => {
+    counter++;
+    return format(`%I = %L`, column, values[counter]);
+  });
+
+  const setString = setArray.join(", ");
+
+  const result = await db.query(
+    `UPDATE plants SET ${setString} WHERE plant_id = $1 RETURNING *`,
+    [plant_id],
+  );
   const { rows } = result;
   return rows[0];
 };

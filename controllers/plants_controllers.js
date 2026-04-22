@@ -26,7 +26,8 @@ const postPlant = async (req, res, next) => {
 
 const patchPlant = async (req, res, next) => {
   const { plant_id } = req.params;
-  const plant = await servicePatchPlant(plant_id);
+  const updatedInfo = req.body;
+  const plant = await servicePatchPlant(plant_id, updatedInfo);
   return res.status(200).send({ plant: plant });
 };
 module.exports = { getAllPlants, postPlant, patchPlant };
