@@ -4,6 +4,8 @@ const {
   fetchPlant,
   updatePlant,
   deletePlant,
+  fetchImages,
+  insertImages,
 } = require("../models/plants_models");
 const isSpeciesValid = require("../utils/isSpeciesValid");
 const InvalidInputError = require("../errors/InvalidInputError");
@@ -77,10 +79,32 @@ const serviceDeletePlant = async (plant_id) => {
   return rowCount;
 };
 
+const serviceGetImages = async (plant_id) => {
+  const regex = /\d/;
+  if (regex.test(plant_id) === false) {
+    throw new InvalidInputError("Invalid plant id");
+  }
+
+  const plantIdValidity = await doesPlantIdExist(plant_id);
+  if (plantIdValidity === false) {
+    throw new NotFoundError("Plant id not found");
+  }
+
+  const images = await fetchImages(plant_id);
+  return images;
+};
+
+const servicePostImages = async (newImages) => {
+  const images = await insertImages(newImages);
+  return images;
+};
+
 module.exports = {
   serviceAllPlants,
   servicePostPlant,
   serviceGetPlant,
   servicePatchPlant,
   serviceDeletePlant,
+  serviceGetImages,
+  servicePostImages,
 };

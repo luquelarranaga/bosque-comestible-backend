@@ -6,6 +6,8 @@ const {
   getPlant,
   patchPlant,
   removePlant,
+  getImages,
+  postImages,
 } = require("../controllers/plants_controllers");
 const handleInvalidMethods = require("../utils/handleInvalidMethods");
 
@@ -16,6 +18,12 @@ router
   .get(getPlant)
   .patch(patchPlant)
   .delete(removePlant)
+  .all(handleInvalidMethods);
+
+router
+  .route("/:plant_id/images")
+  .get(getImages)
+  .post(postImages)
   .all(handleInvalidMethods);
 
 module.exports = router;

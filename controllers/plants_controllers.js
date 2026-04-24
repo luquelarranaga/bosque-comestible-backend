@@ -1,9 +1,12 @@
+const { get } = require("../app");
 const {
   serviceAllPlants,
   servicePostPlant,
   serviceGetPlant,
   servicePatchPlant,
   serviceDeletePlant,
+  serviceGetImages,
+  servicePostImages,
 } = require("../services/plants_services");
 
 const getAllPlants = async (req, res, next) => {
@@ -61,4 +64,35 @@ const removePlant = async (req, res, next) => {
     next(err);
   }
 };
-module.exports = { getAllPlants, postPlant, getPlant, patchPlant, removePlant };
+
+const getImages = async (req, res, next) => {
+  const { plant_id } = req.params;
+
+  try {
+    const images = await serviceGetImages(plant_id);
+    return res.status(200).send({ images: images });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const postImages = async (req, res, next) => {
+  const newImages = req.body;
+  console.log("new images >>> ", newImages);
+  try {
+    const images = await servicePostImages(newImages);
+    return res.status(201).send({ images: images });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = {
+  getAllPlants,
+  postPlant,
+  getPlant,
+  patchPlant,
+  removePlant,
+  getImages,
+  postImages,
+};

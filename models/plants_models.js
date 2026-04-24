@@ -68,10 +68,38 @@ const deletePlant = async (plant_id) => {
   return rowCount;
 };
 
+const fetchImages = async (plant_id) => {
+  const result = await db.query(
+    `SELECT * FROM images WHERE plant_id = $1 ORDER BY date_taken DESC`,
+    [plant_id],
+  );
+  const { rows } = result;
+  return rows;
+};
+
+const insertImages = async (newImages) => {
+  const formattedImages = newImages.map((image) => [
+    image.plant_id,
+    image.date_taken,
+    image.img_url,
+  ]);
+
+  const queryStr = format(
+    `INSERT INTO images (plant_id, date_taken, img_url) VALUES %L RETURNING *`,
+    formattedImages,
+  );
+
+  const { rows } = await db.query(queryStr);
+  console.log("rows >>> ", rows);
+  return rows;
+};
+
 module.exports = {
   fetchAllPlants,
   insertPlant,
   fetchPlant,
   updatePlant,
   deletePlant,
+  fetchImages,
+  insertImages,
 };
