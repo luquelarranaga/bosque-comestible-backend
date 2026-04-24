@@ -7,6 +7,7 @@
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed-prod": "NODE_ENV=production npm run seed",
     "seed": "node ./db/seeds/run-seed.js",
+    "test-seed": "jest seed.test.js",
     "test": "jest --runInBand --detectOpenHandles",
     "prepare": "husky"
   },
