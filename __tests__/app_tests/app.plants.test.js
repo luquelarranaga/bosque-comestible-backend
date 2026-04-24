@@ -12,9 +12,6 @@ afterAll(() => {
   return db.end();
 });
 
-/*
-{ species: "lavender", coordinates: "51.5074,-0.1278", created_at:  },
-*/
 describe("/api/plants/", () => {
   describe("GET 200", () => {
     test("responds with an object with a key of plants with a value of an array of objects", async () => {
@@ -264,7 +261,7 @@ describe("/api/plants/:plant_id/images", () => {
       expect(body).toBeObject();
       expect(body.images).toBeArray();
     });
-    test("plant object contains correct keys", async () => {
+    test("image object contains correct keys", async () => {
       const { body } = await request(app)
         .get("/api/plants/1/images")
         .expect(200);
@@ -385,6 +382,88 @@ describe("/api/plants/:plant_id/images", () => {
       test("returns 404 status code and error message when getting with invalid plant id", async () => {
         const { body } = await request(app)
           .get("/api/plants/99999/images")
+          .expect(404);
+        expect(body.msg).toBe("Plant id not found");
+      });
+    });
+  });
+});
+
+describe("/api/plants/:plant_id/logs", () => {
+  describe("GET 200", () => {
+    test("responds with an object with a key of plant_id with a value of an array of object", async () => {
+      const { body } = await request(app).get("/api/plants/1/logs").expect(200);
+      expect(body).toBeObject();
+      expect(body.logs).toBeArray();
+    });
+    test("each log object contains correct keys", async () => {
+      const { body } = await request(app).get("/api/plants/1/logs").expect(200);
+      const { logs } = body;
+
+      logs.forEach((log) => {
+        expect(typeof log.plant_id).toBe("number");
+        expect(typeof log.created_at).toBe("string");
+        expect(typeof log.body).toBe("string");
+      });
+    });
+  });
+
+  describe("POST 201", () => {
+    test("responds with an object when a log is posted", async () => {
+      const { body } = await request(app)
+        .post("/api/plants/2/logs")
+        .send({
+          plant_id: 2,
+          created_at: new Date(1617102300000),
+          body: "Thorny deciduous tree producing clusters of white blossoms.",
+        })
+        .expect(201);
+      const { log } = body;
+      expect(log).toBeObject();
+      expect(log).not.toBeArray();
+    });
+
+    test("log object in response contains correct key properties", async () => {
+      const { body } = await request(app)
+        .post("/api/plants/2/logs")
+        .send({
+          plant_id: 2,
+          created_at: new Date(1617102300000),
+          body: "Thorny deciduous tree producing clusters of white blossoms.",
+        })
+        .expect(201);
+      const { log } = body;
+
+      expect(typeof log.plant_id).toBe("number");
+      expect(typeof log.created_at).toBe("string");
+      expect(typeof log.body).toBe("string");
+    });
+  });
+
+  describe("ERROR: INVALID METHOD 405", () => {
+    test("returns 405 status code and error message when invalid method used", async () => {
+      const methods = ["put", "patch", "delete"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)
+          [method]("/api/plants/:plant_id/logs")
+          .expect(405);
+        expect(body.msg).toBe("Method not allowed");
+      });
+    });
+  });
+
+  describe("ERROR: INVALID INPUT 400", () => {
+    test("returns 400 status code and error message when getting with invalid plant id", async () => {
+      const { body } = await request(app)
+        .get("/api/plants/userid/logs")
+        .expect(400);
+      expect(body.msg).toBe("Invalid plant id");
+    });
+
+    describe("ERROR: NOT FOUND 404", () => {
+      test("returns 404 status code and error message when getting with invalid plant id", async () => {
+        const { body } = await request(app)
+          .get("/api/plants/99999/logs")
           .expect(404);
         expect(body.msg).toBe("Plant id not found");
       });
