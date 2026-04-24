@@ -1,5 +1,6 @@
 const express = require("express");
 const plantsRouter = require("./routers/plants_routers");
+const imagesRouter = require("./routers/images_routers");
 const cors = require("cors");
 const InvalidInputError = require("./errors/InvalidInputError");
 const NotFoundError = require("./errors/NotFoundError");
@@ -9,6 +10,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/plants", plantsRouter);
+
+app.use("/api/images", imagesRouter);
 
 app.all("/*path", (req, res, next) => {
   res.status(400).send({ msg: "Bad request" });
