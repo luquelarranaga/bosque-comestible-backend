@@ -1,5 +1,5 @@
 const db = require("../../db/connection");
-const data = require("../../db/data/test_data/plants");
+const data = require("../../db/data/test-data/index");
 const seed = require("../../db/seeds/seed");
 const request = require("supertest");
 const app = require("../../app");
@@ -13,12 +13,7 @@ afterAll(() => {
 });
 
 /*
-plant.species,
-      plant.date_planted,
-      plant.coordinates,
-      plant.body,
-      plant.care,
-      plant.img_url,
+{ species: "lavender", coordinates: "51.5074,-0.1278", created_at:  },
 */
 describe("/api/plants/", () => {
   describe("GET 200", () => {
@@ -32,11 +27,8 @@ describe("/api/plants/", () => {
       const { plants } = body;
       plants.forEach((plant) => {
         expect(typeof plant.species).toBe("string");
-        expect(typeof plant.date_planted).toBe("string");
         expect(typeof plant.coordinates).toBe("string");
-        expect(typeof plant.body).toBe("string");
-        expect(typeof plant.care).toBe("string");
-        expect(typeof plant.img_url).toBe("string");
+        expect(typeof plant.created_at).toBe("string");
       });
     });
     test("plants are ordered by species in alphabetical order", async () => {
@@ -45,13 +37,13 @@ describe("/api/plants/", () => {
       const species = plants.map((plant) => plant.species);
       expect(species).toBeSorted();
     });
-    test("each plant species are ordered by date_planted", async () => {
+    test("each plant species are ordered by created_at", async () => {
       const { body } = await request(app).get("/api/plants/").expect(200);
       const { plants } = body;
       const lavenderPlants = plants.filter(
         (plant) => plant.species === "lavender",
       );
-      const datePlanted = lavenderPlants.map((plant) => plant.date_planted);
+      const datePlanted = lavenderPlants.map((plant) => plant.created_at);
       expect(datePlanted).toBeSorted({ descending: true });
     });
     test("plants are filtered by species specified in query", async () => {
@@ -63,12 +55,12 @@ describe("/api/plants/", () => {
         expect(plant.species).toBe("lavender");
       });
     });
-    test("when species queried, plants are ordered by date_planted", async () => {
+    test("when species queried, plants are ordered by created_at", async () => {
       const { body } = await request(app)
         .get("/api/plants?species=lavender")
         .expect(200);
       const { plants } = body;
-      const datePlanted = plants.map((plant) => plant.date_planted);
+      const datePlanted = plants.map((plant) => plant.created_at);
       expect(datePlanted).toBeSorted({ descending: true });
     });
   });
@@ -78,12 +70,8 @@ describe("/api/plants/", () => {
         .post("/api/plants/")
         .send({
           species: "lavender",
-          date_planted: new Date(1609469200000),
           coordinates: "51.5474,-0.1300",
-          body: "new plant",
-          care: "this is how you care for me",
-          img_url:
-            "https://images.pexels.com/photos/207518/pexels-photo-207518.jpeg?w=700&h=700",
+          created_at: new Date(1609469200000),
         })
         .expect(201);
       const { plant } = body;
@@ -95,21 +83,14 @@ describe("/api/plants/", () => {
         .post("/api/plants/")
         .send({
           species: "lavender",
-          date_planted: new Date(1609469200000),
           coordinates: "51.5474,-0.1300",
-          body: "new plant",
-          care: "this is how you care for me",
-          img_url:
-            "https://images.pexels.com/photos/207518/pexels-photo-207518.jpeg?w=700&h=700",
+          created_at: new Date(1609469200000),
         })
         .expect(201);
       const { plant } = body;
       expect(typeof plant.species).toBe("string");
-      expect(typeof plant.date_planted).toBe("string");
       expect(typeof plant.coordinates).toBe("string");
-      expect(typeof plant.body).toBe("string");
-      expect(typeof plant.care).toBe("string");
-      expect(typeof plant.img_url).toBe("string");
+      expect(typeof plant.created_at).toBe("string");
     });
   });
   describe("ERROR: INVALID METHOD 405", () => {
@@ -151,19 +132,17 @@ describe("/api/plants/:plant_id", () => {
       const { plant } = body;
 
       expect(typeof plant.species).toBe("string");
-      expect(typeof plant.date_planted).toBe("string");
       expect(typeof plant.coordinates).toBe("string");
-      expect(typeof plant.body).toBe("string");
-      expect(typeof plant.care).toBe("string");
-      expect(typeof plant.img_url).toBe("string");
+      expect(typeof plant.created_at).toBe("string");
     });
   });
+
   describe("PATCH 200", () => {
     test("responds with the updated plant object", async () => {
       const { body } = await request(app)
         .patch("/api/plants/1")
         .send({
-          body: "leaves are looking yellow",
+          species: "olive tree",
         })
         .expect(200);
 
@@ -171,51 +150,50 @@ describe("/api/plants/:plant_id", () => {
       expect(plant).toBeObject();
       expect(plant).not.toBeArray();
     });
+
     test("responds with object with correct shape", async () => {
       const { body } = await request(app)
         .patch("/api/plants/1")
         .send({
-          body: "leaves are looking yellow",
+          species: "olive tree",
         })
         .expect(200);
       const { plant } = body;
       expect(typeof plant.species).toBe("string");
-      expect(typeof plant.date_planted).toBe("string");
       expect(typeof plant.coordinates).toBe("string");
-      expect(typeof plant.body).toBe("string");
-      expect(typeof plant.care).toBe("string");
-      expect(typeof plant.img_url).toBe("string");
+      expect(typeof plant.created_at).toBe("string");
     });
     test("when one field updated, the updated field reflects the sent data", async () => {
-      const updatedData = { body: "leaves are looking yellow" };
+      const updatedData = { species: "olive tree" };
       const { body } = await request(app)
         .patch("/api/plants/3")
         .send(updatedData)
         .expect(200);
       const { plant } = body;
-      expect(plant.body).toBe("leaves are looking yellow");
+      expect(plant.species).toBe("olive tree");
     });
     test("when multiple fields are updated, the updated fields reflect the sent data", async () => {
       const updatedData = {
-        body: "leaves are looking yellow",
-        img_url:
-          "https://images.pexels.com/photos/1466869/pexels-photo-1466869.jpeg?w=700&h=700",
+        species: "olive tree",
+        coordinates: "51.5081,-0.0759",
       };
       const { body } = await request(app)
         .patch("/api/plants/3")
         .send(updatedData)
         .expect(200);
       const { plant } = body;
-      expect(plant.body).toBe(updatedData.body);
-      expect(plant.img_url).toBe(updatedData.img_url);
+      expect(plant.species).toBe(updatedData.species);
+      expect(plant.coordinates).toBe(updatedData.coordinates);
     });
   });
+
   describe("DELETE 204", () => {
     test("responds with no content", async () => {
       const { body } = await request(app).delete("/api/plants/1").expect(204);
       expect(body).toEqual({});
     });
   });
+
   describe("ERROR: INVALID METHOD 405", () => {
     test("returns 405 status code and error message when invalid method used", async () => {
       const methods = ["put", "post"];
@@ -227,20 +205,23 @@ describe("/api/plants/:plant_id", () => {
       });
     });
   });
+
   describe("ERROR: INVALID INPUT 400", () => {
     test("returns 400 status code and error message when getting with invalid plant id", async () => {
       const { body } = await request(app).get("/api/plants/userid").expect(400);
       expect(body.msg).toBe("Invalid plant id");
     });
+
     test("returns 400 status code and error message when patching with invalid plant id", async () => {
       const { body } = await request(app)
         .patch("/api/plants/userid")
         .send({
-          body: "leaves are looking yellow",
+          species: "olive tree",
         })
         .expect(400);
       expect(body.msg).toBe("Invalid plant id");
     });
+
     test("returns 400 status code and error message when deleting with invalid plant id", async () => {
       const { body } = await request(app)
         .delete("/api/plants/userid")
@@ -248,20 +229,23 @@ describe("/api/plants/:plant_id", () => {
       expect(body.msg).toBe("Invalid plant id");
     });
   });
+
   describe("ERROR: NOT FOUND 404", () => {
     test("returns 404 status code and error message when getting with invalid plant id", async () => {
       const { body } = await request(app).get("/api/plants/99999").expect(404);
       expect(body.msg).toBe("Plant id not found");
     });
+
     test("returns 404 status code and error message when patching with invalid plant id", async () => {
       const { body } = await request(app)
         .patch("/api/plants/99999")
         .send({
-          body: "leaves are looking yellow",
+          species: "olive tree",
         })
         .expect(404);
       expect(body.msg).toBe("Plant id not found");
     });
+
     test("returns 404 status code and error message when deleting with invalid plant id", async () => {
       const { body } = await request(app)
         .delete("/api/plants/99999")
