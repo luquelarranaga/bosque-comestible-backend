@@ -4,14 +4,15 @@ const format = require("pg-format");
 const fetchAllPlants = async (species) => {
   if (species) {
     const result = await db.query(
-      `SELECT * FROM plants WHERE species = $1 ORDER BY date_planted DESC`,
+      `SELECT * FROM plants WHERE species = $1 ORDER BY created_at DESC`,
       [species],
     );
     const { rows } = result;
+
     return rows;
   } else {
     const result = await db.query(
-      "SELECT * FROM plants ORDER BY species, date_planted DESC",
+      "SELECT * FROM plants ORDER BY species, created_at DESC",
     );
     const { rows } = result;
     return rows;
@@ -20,18 +21,11 @@ const fetchAllPlants = async (species) => {
 
 const insertPlant = async (newPlant) => {
   const result = await db.query(
-    `INSERT INTO plants (species, date_planted, coordinates, body, care, img_url)
-    VALUES ($1, $2, $3, $4, $5, $6)
+    `INSERT INTO plants (species, coordinates, created_at)
+    VALUES ($1, $2, $3)
     RETURNING *
     `,
-    [
-      newPlant.species,
-      newPlant.date_planted,
-      newPlant.coordinates,
-      newPlant.body,
-      newPlant.care,
-      newPlant.img_url,
-    ],
+    [newPlant.species, newPlant.coordinates, newPlant.created_at],
   );
   const { rows } = result;
   return rows[0];
