@@ -83,23 +83,29 @@ All endpoints are prefixed with `/api`. Full interactive documentation is availa
 
 | Method | Endpoint                             | Description                                                             |
 | ------ | ------------------------------------ | ----------------------------------------------------------------------- |
-| GET    | `/api/articles`                      | Get all plants, ordered by species and date planted. Supports `species` query params.  |
-| POST | `/api/articles` | Add a new plant to your plant log |
-| GET    | `/api/articles/:plant_id`          | Get a single plant by ID                                              |
-| PATCH  | `/api/articles/:plant_id`          | Update details of your plant                                        |
-| DELETE    | `/api/articles/:plant_id` | Delete your plant                                        |
+| GET    | `/api/plants`                      | Get all plants, ordered by species and date planted. Supports `species` query params.  |
+| POST | `/api/plants` | Add a new plant to your plant log |
+| GET    | `/api/plants/:plant_id`          | Get a single plant by ID                                              |
+| PATCH  | `/api/plants/:plant_id`          | Update details of your plant                                        |
+| DELETE    | `/api/plants/:plant_id` | Delete your plant                                        |
 
-#### Query Parameters for `GET /api/articles`
+#### Query Parameters for `GET /api/plants`
 Parameter `species` only accepts species that already exist in your plant database. Invalid characters such as numerical digits or non-word characters (e.g. "*!?<") will result in a 400 error. 
 
-### Diary Entries
+### Images Entries
 
 | Method | Endpoint                             | Description                                                             |
 | ------ | ------------------------------------ | ----------------------------------------------------------------------- |
-| GET    | `/api/diary_entries`                      | Get all diary entries, ordered by date logged. |
-| POST | `/api/diary_entries` | Add a new diary entry |
-| PATCH  | `/api/diary_entries/:entry_id`          | Update specific diary entry                                       |
-| DELETE    | `/api/diary_entries/:entry_id` | Delete specific diary entry                                       |
+| PATCH  | `/api/images/:image_id`          | Replace images with new urls or amend when image was taken                                       |
+| DELETE    | `/api/images/:image_id` | Delete image                                      |
+
+
+### Logs Entries
+
+| Method | Endpoint                             | Description                                                             |
+| ------ | ------------------------------------ | ----------------------------------------------------------------------- |
+| PATCH  | `/api/logs/:log_id`          | Update body of a log entry                                      |
+| DELETE    | `/api/logs/:log_id` | Delete a log entry  
 
 ---
 
