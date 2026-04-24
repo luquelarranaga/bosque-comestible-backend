@@ -13,7 +13,7 @@ const isSpeciesValid = require("../utils/isSpeciesValid");
 const InvalidInputError = require("../errors/InvalidInputError");
 const doesSpeciesExist = require("../utils/doesSpeciesExist");
 const NotFoundError = require("../errors/NotFoundError");
-const doesPlantIdExist = require("../utils/doesPlantIdExist");
+const doesItemExist = require("../utils/doesItemExist");
 
 const serviceAllPlants = async (query) => {
   let { species = null } = query;
@@ -23,8 +23,8 @@ const serviceAllPlants = async (query) => {
     throw new InvalidInputError("Invalid species query");
   }
 
-  const speciesExists = await doesSpeciesExist(species);
-  if (speciesExists === false) {
+  const isSpeciesFound = await doesItemExist(species, "species", "plants");
+  if (isSpeciesFound === false) {
     throw new NotFoundError("Species not found");
   }
 
@@ -42,8 +42,8 @@ const serviceGetPlant = async (plant_id) => {
     throw new InvalidInputError("Invalid plant id");
   }
 
-  const plantIdValidity = await doesPlantIdExist(plant_id);
-  if (plantIdValidity === false) {
+  const isPlantFound = await doesItemExist(plant_id, "plant_id", "plants");
+  if (isPlantFound === false) {
     throw new NotFoundError("Plant id not found");
   }
 
@@ -57,8 +57,8 @@ const servicePatchPlant = async (plant_id, updatedInfo) => {
     throw new InvalidInputError("Invalid plant id");
   }
 
-  const plantIdValidity = await doesPlantIdExist(plant_id);
-  if (plantIdValidity === false) {
+  const isPlantFound = await doesItemExist(plant_id, "plant_id", "plants");
+  if (isPlantFound === false) {
     throw new NotFoundError("Plant id not found");
   }
 
@@ -72,8 +72,8 @@ const serviceDeletePlant = async (plant_id) => {
     throw new InvalidInputError("Invalid plant id");
   }
 
-  const plantIdValidity = await doesPlantIdExist(plant_id);
-  if (plantIdValidity === false) {
+  const isPlantFound = await doesItemExist(plant_id, "plant_id", "plants");
+  if (isPlantFound === false) {
     throw new NotFoundError("Plant id not found");
   }
 
@@ -87,8 +87,8 @@ const serviceGetImages = async (plant_id) => {
     throw new InvalidInputError("Invalid plant id");
   }
 
-  const plantIdValidity = await doesPlantIdExist(plant_id);
-  if (plantIdValidity === false) {
+  const isPlantFound = await doesItemExist(plant_id, "plant_id", "plants");
+  if (isPlantFound === false) {
     throw new NotFoundError("Plant id not found");
   }
 
@@ -107,8 +107,8 @@ const serviceGetLogs = async (plant_id) => {
     throw new InvalidInputError("Invalid plant id");
   }
 
-  const plantIdValidity = await doesPlantIdExist(plant_id);
-  if (plantIdValidity === false) {
+  const isPlantFound = await doesItemExist(plant_id, "plant_id", "plants");
+  if (isPlantFound === false) {
     throw new NotFoundError("Plant id not found");
   }
 
