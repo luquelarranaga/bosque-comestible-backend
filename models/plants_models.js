@@ -90,8 +90,26 @@ const insertImages = async (newImages) => {
   );
 
   const { rows } = await db.query(queryStr);
-  console.log("rows >>> ", rows);
   return rows;
+};
+
+const fetchLogs = async (plant_id) => {
+  const result = await db.query(
+    `SELECT * FROM logs WHERE plant_id = $1 ORDER BY created_at DESC`,
+    [plant_id],
+  );
+  const { rows } = result;
+  return rows;
+};
+
+const insertLog = async (newLog) => {
+  const result = await db.query(
+    `INSERT INTO logs (plant_id, created_at, body) VALUES ($1, $2, $3) RETURNING *`,
+    [newLog.plant_id, newLog.created_at, newLog.body],
+  );
+
+  const { rows } = result;
+  return rows[0];
 };
 
 module.exports = {
@@ -102,4 +120,6 @@ module.exports = {
   deletePlant,
   fetchImages,
   insertImages,
+  fetchLogs,
+  insertLog,
 };

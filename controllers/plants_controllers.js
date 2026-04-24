@@ -7,6 +7,8 @@ const {
   serviceDeletePlant,
   serviceGetImages,
   servicePostImages,
+  serviceGetLogs,
+  servicePostLog,
 } = require("../services/plants_services");
 
 const getAllPlants = async (req, res, next) => {
@@ -78,10 +80,30 @@ const getImages = async (req, res, next) => {
 
 const postImages = async (req, res, next) => {
   const newImages = req.body;
-  console.log("new images >>> ", newImages);
   try {
     const images = await servicePostImages(newImages);
     return res.status(201).send({ images: images });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getLogs = async (req, res, next) => {
+  const { plant_id } = req.params;
+
+  try {
+    const logs = await serviceGetLogs(plant_id);
+    return res.status(200).send({ logs: logs });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const postLog = async (req, res, next) => {
+  const newLog = req.body;
+  try {
+    const log = await servicePostLog(newLog);
+    return res.status(201).send({ log: log });
   } catch (err) {
     next(err);
   }
@@ -95,4 +117,6 @@ module.exports = {
   removePlant,
   getImages,
   postImages,
+  getLogs,
+  postLog,
 };
