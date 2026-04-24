@@ -86,17 +86,30 @@ describe("seed logs table", () => {
       });
   });
 
-  test("logs table has date_posted column of varying character", () => {
+  test("logs table has created_at column as a timestamp", () => {
     return db
       .query(
         `SELECT column_name, data_type, character_maximum_length
             FROM information_schema.columns
             WHERE table_name = 'logs'
-            AND column_name = 'date_posted';`,
+            AND column_name = 'created_at';`,
       )
       .then(({ rows: [column] }) => {
-        expect(column.column_name).toBe("date_posted");
-        expect(column.data_type).toBe("character varying");
+        expect(column.column_name).toBe("created_at");
+        expect(column.data_type).toBe("timestamp without time zone");
+      });
+  });
+
+  test("created_at column has default value of the current timestamp", () => {
+    return db
+      .query(
+        `SELECT column_default
+        FROM information_schema.columns
+        WHERE table_name = 'logs'
+        AND column_name = 'created_at';`,
+      )
+      .then(({ rows: [{ column_default }] }) => {
+        expect(column_default).toBe("CURRENT_TIMESTAMP");
       });
   });
 
