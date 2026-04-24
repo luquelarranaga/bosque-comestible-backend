@@ -255,9 +255,214 @@ describe("/api/plants/:plant_id", () => {
   });
 });
 
+describe("/api/plants/:plant_id/images", () => {
+  describe("GET 200", () => {
+    test("responds with an object with a key of plant_id with a value of an array of object", async () => {
+      const { body } = await request(app)
+        .get("/api/plants/1/images")
+        .expect(200);
+      expect(body).toBeObject();
+      expect(body.images).toBeArray();
+    });
+    test("plant object contains correct keys", async () => {
+      const { body } = await request(app)
+        .get("/api/plants/1/images")
+        .expect(200);
+      const { images } = body;
+
+      images.forEach((image) => {
+        expect(typeof image.plant_id).toBe("number");
+        expect(typeof image.date_taken).toBe("string");
+        expect(typeof image.img_url).toBe("string");
+      });
+    });
+  });
+
+  describe("POST 201", () => {
+    test("responds with an array containing one object when a single image is posted", async () => {
+      const { body } = await request(app)
+        .post("/api/plants/2/images")
+        .send([
+          {
+            plant_id: 2,
+            date_taken: "02/04/2026",
+            img_url:
+              "https://images.pexels.com/photos/931177/pexels-photo-931179.jpeg?w=700&h=700",
+          },
+        ])
+        .expect(201);
+      const { images } = body;
+      expect(images).toBeArray();
+      expect(images.length).toBe(1);
+    });
+
+    test("responds with an array containing of objects when images are posted", async () => {
+      const { body } = await request(app)
+        .post("/api/plants/2/images")
+        .send([
+          {
+            plant_id: 2,
+            date_taken: "02/04/2026",
+            img_url:
+              "https://images.pexels.com/photos/931177/pexels-photo-931179.jpeg?w=700&h=700",
+          },
+          {
+            plant_id: 2,
+            date_taken: "02/04/2026",
+            img_url:
+              "https://images.pexels.com/photos/931177/pexels-photo-931180.jpeg?w=700&h=700",
+          },
+          {
+            plant_id: 2,
+            date_taken: "02/08/2026",
+            img_url:
+              "https://images.pexels.com/photos/931177/pexels-photo-931181.jpeg?w=700&h=700",
+          },
+        ])
+        .expect(201);
+      const { images } = body;
+      expect(images).toBeArray();
+      expect(images.length).toBe(3);
+    });
+
+    test("each object in response array contains correct key properties", async () => {
+      const newImages = [
+        {
+          plant_id: 2,
+          date_taken: "02/04/2026",
+          img_url:
+            "https://images.pexels.com/photos/931177/pexels-photo-931179.jpeg?w=700&h=700",
+        },
+        {
+          plant_id: 2,
+          date_taken: "02/04/2026",
+          img_url:
+            "https://images.pexels.com/photos/931177/pexels-photo-931180.jpeg?w=700&h=700",
+        },
+        {
+          plant_id: 2,
+          date_taken: "02/08/2026",
+          img_url:
+            "https://images.pexels.com/photos/931177/pexels-photo-931181.jpeg?w=700&h=700",
+        },
+      ];
+
+      const { body } = await request(app)
+        .post("/api/plants/2/images")
+        .send(newImages)
+        .expect(201);
+      const { images } = body;
+
+      images.forEach((image) => {
+        expect(typeof image.plant_id).toBe("number");
+        expect(typeof image.date_taken).toBe("string");
+        expect(typeof image.img_url).toBe("string");
+      });
+    });
+  });
+
+  describe("ERROR: INVALID METHOD 405", () => {
+    test("returns 405 status code and error message when invalid method used", async () => {
+      const methods = ["put", "patch", "delete"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)
+          [method]("/api/plants/:plant_id/images")
+          .expect(405);
+        expect(body.msg).toBe("Method not allowed");
+      });
+    });
+  });
+
+  describe("ERROR: INVALID INPUT 400", () => {
+    test("returns 400 status code and error message when getting with invalid plant id", async () => {
+      const { body } = await request(app)
+        .get("/api/plants/userid/images")
+        .expect(400);
+      expect(body.msg).toBe("Invalid plant id");
+    });
+
+    describe("ERROR: NOT FOUND 404", () => {
+      test("returns 404 status code and error message when getting with invalid plant id", async () => {
+        const { body } = await request(app)
+          .get("/api/plants/99999/images")
+          .expect(404);
+        expect(body.msg).toBe("Plant id not found");
+      });
+    });
+  });
+});
+
 describe("/api/invalid-path", () => {
   test("Invalid path returns 400 error", async () => {
     const { body } = await request(app).get("/api/invalid-path").expect(400);
     expect(body.msg).toBe("Bad request");
   });
 });
+
+// describe("PATCH 201", () => {
+//   test("responds with the updated plant object", async () => {
+//     const { body } = await request(app)
+//       .patch("/api/plants/1/images")
+//       .send({
+//         img_url:
+//           "https://images.pexels.com/photos/1470565/pexels-photo-1470565.jpeg?w=700&h=700",
+//       })
+//       .expect(200);
+
+//     const { images } = body;
+//     expect(images).toBeObject();
+//     expect(images).toBeArray();
+//   });
+
+//   test("responds with object with correct shape", async () => {
+//     const { body } = await request(app)
+//       .patch("/api/plants/1/images")
+//       .send({
+//         img_url:
+//           "https://images.pexels.com/photos/1470565/pexels-photo-1470565.jpeg?w=700&h=700",
+//       })
+//       .expect(200);
+//     const { images } = body;
+
+//     images.forEach((image) => {
+//       expect(typeof image.plant_id).toBe("integer");
+//       expect(typeof image.date_taken).toBe("string");
+//       expect(typeof image.img_url).toBe("string");
+//     });
+//   });
+//   test("when one field updated, the updated field reflects the sent data", async () => {
+//     const updatedData = {
+//       img_url:
+//         "https://images.pexels.com/photos/1470565/pexels-photo-1470565.jpeg?w=700&h=700",
+//     };
+//     const { body } = await request(app)
+//       .patch("/api/plants/3/images")
+//       .send(updatedData)
+//       .expect(200);
+//     const { plant } = body;
+//     expect(plant.species).toBe("olive tree");
+//   });
+//   test("when multiple fields are updated, the updated fields reflect the sent data", async () => {
+//     const updatedData = {
+//       date_taken: "02/15/2026",
+//       img_url:
+//         "https://images.pexels.com/photos/1470565/pexels-photo-1470565.jpeg?w=700&h=700",
+//     };
+//     const { body } = await request(app)
+//       .patch("/api/plants/3/images")
+//       .send(updatedData)
+//       .expect(200);
+//     const { plant } = body;
+//     expect(plant.date_taken).toBe(updatedData.date_taken);
+//     expect(plant.img_url).toBe(updatedData.img_url);
+//   });
+// });
+
+// describe("DELETE 204", () => {
+//   test("responds with no content", async () => {
+//     const { body } = await request(app)
+//       .delete("/api/plants/1/images")
+//       .expect(204);
+//     expect(body).toEqual({});
+//   });
+// });
