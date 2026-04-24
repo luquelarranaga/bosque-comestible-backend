@@ -18,7 +18,7 @@ const seed = async ({ plantsData, logsData, imagesData }) => {
     CREATE TABLE logs (
     log_id SERIAL PRIMARY KEY,
     plant_id INT REFERENCES plants(plant_id) ON DELETE CASCADE,
-    date_posted VARCHAR NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     body VARCHAR
 )`);
 
@@ -45,12 +45,12 @@ const seed = async ({ plantsData, logsData, imagesData }) => {
   await db.query(plantsQueryStr);
 
   const formattedLogs = logsData.map((log) => {
-    return [log.plant_id, log.date_posted, log.body];
+    return [log.plant_id, log.created_at, log.body];
   });
 
   const logsQueryStr = format(
     `INSERT INTO logs
-    (plant_id, date_posted, body)
+    (plant_id, created_at, body)
     VALUES %L
     RETURNING *;`,
     formattedLogs,
