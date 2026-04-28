@@ -2,8 +2,9 @@
   "name": "bosque-comestible",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "listen.js",
   "scripts": {
+    "start": "node listen.js",
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed-prod": "NODE_ENV=production npm run seed",
     "seed": "node ./db/seeds/run-seed.js",
@@ -24,7 +25,7 @@
   },
   "dependencies": {
     "cors": "^2.8.6",
-    "dotenv": "^17.4.0",
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "pg": "^8.20.0",
     "pg-format": "^1.0.4"
