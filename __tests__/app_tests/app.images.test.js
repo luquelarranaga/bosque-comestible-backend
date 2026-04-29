@@ -154,6 +154,7 @@ describe("api/images/display_images", () => {
       const { displayImages } = body;
       displayImages.forEach((displayImage) => {
         expect(typeof displayImage.plant_id).toBe("number");
+        expect(typeof displayImage.species).toBe("string");
         expect(typeof displayImage.date_taken).toBe("string");
         expect(typeof displayImage.img_url).toBe("string");
       });
