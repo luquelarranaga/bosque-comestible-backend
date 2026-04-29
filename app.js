@@ -17,7 +17,7 @@ app.use("/api/images", imagesRouter);
 app.use("/api/logs", logsRouter);
 
 app.all("/*path", (req, res, next) => {
-  res.status(400).send({ msg: "Bad request" });
+  res.status(404).send({ msg: "Path not found" });
 });
 
 app.use((err, req, res, next) => {
