@@ -146,6 +146,7 @@ describe("api/images/display_images", () => {
       expect(body).toBeObject();
       expect(body.displayImages).toBeArray();
     });
+
     test("each image object contains correct keys", async () => {
       const { body } = await request(app)
         .get("/api/images/display_images")
@@ -155,6 +156,39 @@ describe("api/images/display_images", () => {
         expect(typeof displayImage.plant_id).toBe("number");
         expect(typeof displayImage.date_taken).toBe("string");
         expect(typeof displayImage.img_url).toBe("string");
+      });
+    });
+
+    test("the returned images are the most recent for each plant_id", async () => {
+      const { body } = await request(app)
+        .get("/api/images/display_images")
+        .expect(200);
+
+      const { displayImages } = body;
+
+      displayImages.forEach((image) => {
+        const allImagesForThisPlant = data.imagesData.filter(
+          (img) => img.plant_id === image.plant_id,
+        );
+
+        const latestExpectedImage = allImagesForThisPlant.sort((a, b) => {
+          return new Date(b.date_taken) - new Date(a.date_taken);
+        })[0];
+
+        expect(image.img_url).toBe(latestExpectedImage.img_url);
+        expect(image.date_taken).toBe(latestExpectedImage.date_taken);
+      });
+    });
+  });
+
+  describe("ERROR: INVALID METHOD 405", () => {
+    test("returns 405 status code and error message when invalid method used", () => {
+      const methods = ["put", "post", "patch", "delete"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)
+          [method]("/api/images/display_images")
+          .expect(405);
+        expect(body.msg).toBe("Method not allowed");
       });
     });
   });
