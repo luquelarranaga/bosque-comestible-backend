@@ -88,6 +88,10 @@ All endpoints are prefixed with `/api`. Full interactive documentation is availa
 | GET    | `/api/plants/:plant_id`          | Get a single plant by ID                                              |
 | PATCH  | `/api/plants/:plant_id`          | Update details of your plant                                        |
 | DELETE    | `/api/plants/:plant_id` | Delete your plant                                        |
+| GET    | `/api/plants/:plant_id/images`          | Get a all images for a given plant ID                                              |
+| POST | `/api/plants/:plant_id/images` | Post one or more images to a plant |
+| GET    | `/api/plants/:plant_id/logs`          | Get a all logs for a given plant ID                                              |
+| POST | `/api/plants/:plant_id/logs` | Post a new log to a plant |
 
 #### Query Parameters for `GET /api/plants`
 Parameter `species` only accepts species that already exist in your plant database. Invalid characters such as numerical digits or non-word characters (e.g. "*!?<") will result in a 400 error. 
