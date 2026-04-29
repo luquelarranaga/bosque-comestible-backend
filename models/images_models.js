@@ -30,7 +30,17 @@ const removeImage = async (image_id) => {
   return rowCount;
 };
 
+const fetchDisplayImages = async () => {
+  console.log("in model");
+  const result = await db.query(
+    `SELECT DISTINCT ON (plant_id) image_id, plant_id, img_url, date_taken FROM images ORDER BY plant_id, date_taken DESC`,
+  );
+  const { rows } = result;
+  return rows;
+};
+
 module.exports = {
   updateImage,
   removeImage,
+  fetchDisplayImages,
 };

@@ -1,4 +1,8 @@
-const { updateImage, removeImage } = require("../models/images_models");
+const {
+  updateImage,
+  removeImage,
+  fetchDisplayImages,
+} = require("../models/images_models");
 const InvalidInputError = require("../errors/InvalidInputError");
 const NotFoundError = require("../errors/NotFoundError");
 const doesItemExist = require("../utils/doesItemExist");
@@ -32,7 +36,14 @@ const serviceDeleteImage = async (image_id) => {
   return rowCount;
 };
 
+const serviceGetDisplayImages = async () => {
+  console.log("in service");
+  const displayImages = await fetchDisplayImages();
+  return displayImages;
+};
+
 module.exports = {
   servicePatchImage,
   serviceDeleteImage,
+  serviceGetDisplayImages,
 };

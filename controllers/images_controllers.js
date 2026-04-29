@@ -2,6 +2,7 @@ const { get } = require("../app");
 const {
   servicePatchImage,
   serviceDeleteImage,
+  serviceGetDisplayImages,
 } = require("../services/images_services");
 
 const patchImage = async (req, res, next) => {
@@ -29,7 +30,18 @@ const deleteImage = async (req, res, next) => {
   }
 };
 
+const getDisplayImages = async (req, res, next) => {
+  console.log("in controller");
+  try {
+    const displayImages = await serviceGetDisplayImages();
+    return res.status(200).send({ displayImages: displayImages });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   patchImage,
   deleteImage,
+  getDisplayImages,
 };
