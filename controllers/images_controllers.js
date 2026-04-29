@@ -31,7 +31,6 @@ const deleteImage = async (req, res, next) => {
 };
 
 const getDisplayImages = async (req, res, next) => {
-  console.log("in controller");
   try {
     const displayImages = await serviceGetDisplayImages();
     return res.status(200).send({ displayImages: displayImages });

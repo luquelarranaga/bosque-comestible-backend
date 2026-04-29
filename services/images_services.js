@@ -37,7 +37,6 @@ const serviceDeleteImage = async (image_id) => {
 };
 
 const serviceGetDisplayImages = async () => {
-  console.log("in service");
   const displayImages = await fetchDisplayImages();
   return displayImages;
 };
