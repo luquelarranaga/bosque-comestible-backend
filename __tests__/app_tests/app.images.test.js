@@ -137,9 +137,32 @@ describe("/api/images/:image_id", () => {
   });
 });
 
+describe("api/images/display_images", () => {
+  describe("GET 200", () => {
+    test("responds with an object with a key of displayImages with a value of an array of objects", async () => {
+      const { body } = await request(app)
+        .get("/api/images/display_images")
+        .expect(200);
+      expect(body).toBeObject();
+      expect(body.displayImages).toBeArray();
+    });
+    test("each image object contains correct keys", async () => {
+      const { body } = await request(app)
+        .get("/api/images/display_images")
+        .expect(200);
+      const { displayImages } = body;
+      displayImages.forEach((displayImage) => {
+        expect(typeof displayImage.plant_id).toBe("number");
+        expect(typeof displayImage.date_taken).toBe("string");
+        expect(typeof displayImage.img_url).toBe("string");
+      });
+    });
+  });
+});
+
 describe("/api/invalid-path", () => {
-  test("Invalid path returns 400 error", async () => {
-    const { body } = await request(app).get("/api/invalid-path").expect(400);
-    expect(body.msg).toBe("Bad request");
+  test("Invalid path returns 404 error", async () => {
+    const { body } = await request(app).get("/api/invalid-path").expect(404);
+    expect(body.msg).toBe("Path not found");
   });
 });
