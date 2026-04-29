@@ -472,8 +472,8 @@ describe("/api/plants/:plant_id/logs", () => {
 });
 
 describe("/api/invalid-path", () => {
-  test("Invalid path returns 400 error", async () => {
-    const { body } = await request(app).get("/api/invalid-path").expect(400);
-    expect(body.msg).toBe("Bad request");
+  test("Invalid path returns 404 error", async () => {
+    const { body } = await request(app).get("/api/invalid-path").expect(404);
+    expect(body.msg).toBe("Path not found");
   });
 });
