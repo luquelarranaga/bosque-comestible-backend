@@ -86,16 +86,16 @@ describe("seed logs table", () => {
       });
   });
 
-  test("logs table has created_at column as a timestamp", () => {
+  test("logs table has log_date column as a timestamp", () => {
     return db
       .query(
         `SELECT column_name, data_type, character_maximum_length
             FROM information_schema.columns
             WHERE table_name = 'logs'
-            AND column_name = 'created_at';`,
+            AND column_name = 'log_date';`,
       )
       .then(({ rows: [column] }) => {
-        expect(column.column_name).toBe("created_at");
+        expect(column.column_name).toBe("log_date");
         expect(column.data_type).toBe("timestamp without time zone");
       });
   });
@@ -106,7 +106,7 @@ describe("seed logs table", () => {
         `SELECT column_default
         FROM information_schema.columns
         WHERE table_name = 'logs'
-        AND column_name = 'created_at';`,
+        AND column_name = 'log_date';`,
       )
       .then(({ rows: [{ column_default }] }) => {
         expect(column_default).toBe("CURRENT_TIMESTAMP");

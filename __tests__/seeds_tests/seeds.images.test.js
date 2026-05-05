@@ -86,16 +86,16 @@ describe("seed images table", () => {
       });
   });
 
-  test("images table has date_taken column of varying character", () => {
+  test("images table has image_date column of varying character", () => {
     return db
       .query(
         `SELECT column_name, data_type, character_maximum_length
             FROM information_schema.columns
             WHERE table_name = 'images'
-            AND column_name = 'date_taken';`,
+            AND column_name = 'image_date';`,
       )
       .then(({ rows: [column] }) => {
-        expect(column.column_name).toBe("date_taken");
+        expect(column.column_name).toBe("image_date");
         expect(column.data_type).toBe("character varying");
       });
   });
