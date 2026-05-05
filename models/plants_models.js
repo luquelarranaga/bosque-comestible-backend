@@ -30,8 +30,6 @@ const insertPlant = async (newPlant) => {
     img_url,
   } = newPlant;
 
-  console.log("log date and body >> ", log_date, body);
-
   const client = await db.connect();
 
   try {

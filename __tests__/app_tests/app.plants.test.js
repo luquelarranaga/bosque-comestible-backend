@@ -19,6 +19,7 @@ describe("/api/plants/", () => {
       expect(body).toBeObject();
       expect(body.plants).toBeArray();
     });
+
     test("each plant object contains correct keys", async () => {
       const { body } = await request(app).get("/api/plants/").expect(200);
       const { plants } = body;
@@ -28,12 +29,14 @@ describe("/api/plants/", () => {
         expect(typeof plant.created_at).toBe("string");
       });
     });
+
     test("plants are ordered by species in alphabetical order", async () => {
       const { body } = await request(app).get("/api/plants/").expect(200);
       const { plants } = body;
       const species = plants.map((plant) => plant.species);
       expect(species).toBeSorted();
     });
+
     test("each plant species are ordered by created_at", async () => {
       const { body } = await request(app).get("/api/plants/").expect(200);
       const { plants } = body;
@@ -43,6 +46,7 @@ describe("/api/plants/", () => {
       const datePlanted = lavenderPlants.map((plant) => plant.created_at);
       expect(datePlanted).toBeSorted({ descending: true });
     });
+
     test("plants are filtered by species specified in query", async () => {
       const { body } = await request(app)
         .get("/api/plants?species=lavender")
@@ -52,6 +56,7 @@ describe("/api/plants/", () => {
         expect(plant.species).toBe("lavender");
       });
     });
+
     test("when species queried, plants are ordered by created_at", async () => {
       const { body } = await request(app)
         .get("/api/plants?species=lavender")
@@ -61,6 +66,7 @@ describe("/api/plants/", () => {
       expect(datePlanted).toBeSorted({ descending: true });
     });
   });
+
   describe("POST 201", () => {
     test("responds with a single object", async () => {
       const { body } = await request(app)
@@ -102,8 +108,6 @@ describe("/api/plants/", () => {
         })
         .expect(201);
       const { newPlant } = body;
-      console.log("new plant images >> ", newPlant.images);
-      console.log(typeof newPlant.images);
 
       expect(typeof newPlant.plant.species).toBe("string");
       expect(typeof newPlant.plant.coordinates).toBe("string");
@@ -127,6 +131,7 @@ describe("/api/plants/", () => {
       });
     });
   });
+
   describe("ERROR: INVALID INPUT 400", () => {
     test("returns 400 error when invalid species is queried", async () => {
       const { body } = await request(app)
@@ -135,6 +140,7 @@ describe("/api/plants/", () => {
       expect(body.msg).toBe("Invalid species query");
     });
   });
+
   describe("ERROR: BAD REQUEST 404", () => {
     test("returns 404 error when valid species is queried but not found in the database", async () => {
       const { body } = await request(app)
@@ -152,6 +158,7 @@ describe("/api/plants/:plant_id", () => {
       expect(body).toBeObject();
       expect(body.plants).not.toBeArray();
     });
+
     test("plant object contains correct keys", async () => {
       const { body } = await request(app).get("/api/plants/1").expect(200);
       const { plant } = body;
@@ -188,6 +195,7 @@ describe("/api/plants/:plant_id", () => {
       expect(typeof plant.coordinates).toBe("string");
       expect(typeof plant.created_at).toBe("string");
     });
+
     test("when one field updated, the updated field reflects the sent data", async () => {
       const updatedData = { species: "olive tree" };
       const { body } = await request(app)
@@ -197,6 +205,7 @@ describe("/api/plants/:plant_id", () => {
       const { plant } = body;
       expect(plant.species).toBe("olive tree");
     });
+
     test("when multiple fields are updated, the updated fields reflect the sent data", async () => {
       const updatedData = {
         species: "olive tree",
@@ -289,6 +298,7 @@ describe("/api/plants/:plant_id/images", () => {
       expect(body).toBeObject();
       expect(body.images).toBeArray();
     });
+
     test("image object contains correct keys", async () => {
       const { body } = await request(app)
         .get("/api/plants/1/images")
@@ -424,6 +434,7 @@ describe("/api/plants/:plant_id/logs", () => {
       expect(body).toBeObject();
       expect(body.logs).toBeArray();
     });
+
     test("each log object contains correct keys", async () => {
       const { body } = await request(app).get("/api/plants/1/logs").expect(200);
       const { logs } = body;
