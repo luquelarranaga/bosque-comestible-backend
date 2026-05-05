@@ -18,7 +18,7 @@ const seed = async ({ plantsData, logsData, imagesData }) => {
     CREATE TABLE logs (
     log_id SERIAL PRIMARY KEY,
     plant_id INT REFERENCES plants(plant_id) ON DELETE CASCADE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    log_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     body VARCHAR
 )`);
 
@@ -26,8 +26,8 @@ const seed = async ({ plantsData, logsData, imagesData }) => {
     CREATE TABLE images (
     image_id SERIAL PRIMARY KEY,
     plant_id INT REFERENCES plants(plant_id) ON DELETE CASCADE,
-    date_taken VARCHAR NOT NULL,
-    img_url VARCHAR NOT NULL
+    image_date VARCHAR,
+    img_url VARCHAR
 )`);
 
   const formattedPlants = plantsData.map((plant) => {
@@ -45,12 +45,12 @@ const seed = async ({ plantsData, logsData, imagesData }) => {
   await db.query(plantsQueryStr);
 
   const formattedLogs = logsData.map((log) => {
-    return [log.plant_id, log.created_at, log.body];
+    return [log.plant_id, log.log_date, log.body];
   });
 
   const logsQueryStr = format(
     `INSERT INTO logs
-    (plant_id, created_at, body)
+    (plant_id, log_date, body)
     VALUES %L
     RETURNING *;`,
     formattedLogs,
@@ -59,12 +59,12 @@ const seed = async ({ plantsData, logsData, imagesData }) => {
   await db.query(logsQueryStr);
 
   const formattedImages = imagesData.map((image) => {
-    return [image.plant_id, image.date_taken, image.img_url];
+    return [image.plant_id, image.image_date, image.img_url];
   });
 
   const imagesQueryStr = format(
     `INSERT INTO images
-    (plant_id, date_taken, img_url)
+    (plant_id, image_date, img_url)
     VALUES %L
     RETURNING *;`,
     formattedImages,
