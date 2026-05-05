@@ -38,7 +38,7 @@ describe("/api/logs/:log_id", () => {
       const { log } = body;
 
       expect(typeof log.plant_id).toBe("number");
-      expect(typeof log.created_at).toBe("string");
+      expect(typeof log.log_date).toBe("string");
       expect(typeof log.body).toBe("string");
     });
 

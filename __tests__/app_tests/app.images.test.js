@@ -40,7 +40,7 @@ describe("/api/images/:image_id", () => {
       const { image } = body;
 
       expect(typeof image.plant_id).toBe("number");
-      expect(typeof image.date_taken).toBe("string");
+      expect(typeof image.image_date).toBe("string");
       expect(typeof image.img_url).toBe("string");
     });
 
@@ -62,7 +62,7 @@ describe("/api/images/:image_id", () => {
 
     test("when multiple fields are updated, the updated fields reflect the sent data", async () => {
       const updatedData = {
-        date_taken: "02/15/2026",
+        image_date: "02/15/2026",
         img_url:
           "https://images.pexels.com/photos/1470565/pexels-photo-1470565.jpeg?w=700&h=700",
       };
@@ -72,7 +72,7 @@ describe("/api/images/:image_id", () => {
         .expect(200);
       const { image } = body;
 
-      expect(image.date_taken).toBe(updatedData.date_taken);
+      expect(image.image_date).toBe(updatedData.image_date);
       expect(image.img_url).toBe(updatedData.img_url);
     });
   });
@@ -143,6 +143,7 @@ describe("api/images/display_images", () => {
       const { body } = await request(app)
         .get("/api/images/display_images")
         .expect(200);
+
       expect(body).toBeObject();
       expect(body.displayImages).toBeArray();
     });
@@ -152,10 +153,11 @@ describe("api/images/display_images", () => {
         .get("/api/images/display_images")
         .expect(200);
       const { displayImages } = body;
+
       displayImages.forEach((displayImage) => {
         expect(typeof displayImage.plant_id).toBe("number");
         expect(typeof displayImage.species).toBe("string");
-        expect(typeof displayImage.date_taken).toBe("string");
+        expect(typeof displayImage.image_date).toBe("string");
         expect(typeof displayImage.img_url).toBe("string");
       });
     });
@@ -173,11 +175,11 @@ describe("api/images/display_images", () => {
         );
 
         const latestExpectedImage = allImagesForThisPlant.sort((a, b) => {
-          return new Date(b.date_taken) - new Date(a.date_taken);
+          return new Date(b.image_date) - new Date(a.image_date);
         })[0];
 
         expect(image.img_url).toBe(latestExpectedImage.img_url);
-        expect(image.date_taken).toBe(latestExpectedImage.date_taken);
+        expect(image.image_date).toBe(latestExpectedImage.image_date);
       });
     });
   });

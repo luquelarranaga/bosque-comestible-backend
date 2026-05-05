@@ -68,28 +68,56 @@ describe("/api/plants/", () => {
         .send({
           species: "lavender",
           coordinates: "51.5474,-0.1300",
-          created_at: new Date(1609469200000),
+          created_at: new Date(),
+          log_date: new Date(),
+          body: "planted today",
+          image_date: "30/04/2026",
+          img_url: [
+            "https://images.pexels.com/photos/957024/forest-trees-perspective-bright-957024.jpeg?w=700&h=700",
+            "https://images.pexels.com/photos/957024/forest-trees-perspective-bright-957024.jpeg?w=700&h=340",
+          ],
         })
         .expect(201);
-      const { plant } = body;
-      expect(plant).toBeObject();
-      expect(plant).not.toBeArray();
+
+      const { newPlant } = body;
+
+      expect(newPlant).toBeObject();
+      expect(newPlant).not.toBeArray();
     });
+
     test("object contains correct key properties", async () => {
       const { body } = await request(app)
         .post("/api/plants/")
         .send({
           species: "lavender",
           coordinates: "51.5474,-0.1300",
-          created_at: new Date(1609469200000),
+          created_at: new Date(),
+          log_date: new Date(),
+          body: "planted today",
+          image_date: "30/04/2026",
+          img_url: [
+            "https://images.pexels.com/photos/957024/forest-trees-perspective-bright-957024.jpeg?w=700&h=700",
+            "https://images.pexels.com/photos/957024/forest-trees-perspective-bright-957024.jpeg?w=700&h=340",
+          ],
         })
         .expect(201);
-      const { plant } = body;
-      expect(typeof plant.species).toBe("string");
-      expect(typeof plant.coordinates).toBe("string");
-      expect(typeof plant.created_at).toBe("string");
+      const { newPlant } = body;
+      console.log("new plant images >> ", newPlant.images);
+      console.log(typeof newPlant.images);
+
+      expect(typeof newPlant.plant.species).toBe("string");
+      expect(typeof newPlant.plant.coordinates).toBe("string");
+      expect(typeof newPlant.plant.created_at).toBe("string");
+      expect(typeof newPlant.log.log_date).toBe("string");
+      expect(typeof newPlant.log.body).toBe("string");
+
+      newPlant.images.forEach((image) => {
+        expect(typeof image.image_date).toBe("string");
+        expect(typeof image.img_url).toBe("string");
+      });
     });
   });
+
   describe("ERROR: INVALID METHOD 405", () => {
     test("returns 405 status code and error message when invalid method used", () => {
       const methods = ["put", "patch", "delete"];
@@ -269,7 +297,7 @@ describe("/api/plants/:plant_id/images", () => {
 
       images.forEach((image) => {
         expect(typeof image.plant_id).toBe("number");
-        expect(typeof image.date_taken).toBe("string");
+        expect(typeof image.image_date).toBe("string");
         expect(typeof image.img_url).toBe("string");
       });
     });
@@ -282,7 +310,7 @@ describe("/api/plants/:plant_id/images", () => {
         .send([
           {
             plant_id: 2,
-            date_taken: "02/04/2026",
+            image_date: "02/04/2026",
             img_url:
               "https://images.pexels.com/photos/931177/pexels-photo-931179.jpeg?w=700&h=700",
           },
@@ -299,19 +327,19 @@ describe("/api/plants/:plant_id/images", () => {
         .send([
           {
             plant_id: 2,
-            date_taken: "02/04/2026",
+            image_date: "02/04/2026",
             img_url:
               "https://images.pexels.com/photos/931177/pexels-photo-931179.jpeg?w=700&h=700",
           },
           {
             plant_id: 2,
-            date_taken: "02/04/2026",
+            image_date: "02/04/2026",
             img_url:
               "https://images.pexels.com/photos/931177/pexels-photo-931180.jpeg?w=700&h=700",
           },
           {
             plant_id: 2,
-            date_taken: "02/08/2026",
+            image_date: "02/08/2026",
             img_url:
               "https://images.pexels.com/photos/931177/pexels-photo-931181.jpeg?w=700&h=700",
           },
@@ -326,19 +354,19 @@ describe("/api/plants/:plant_id/images", () => {
       const newImages = [
         {
           plant_id: 2,
-          date_taken: "02/04/2026",
+          image_date: "02/04/2026",
           img_url:
             "https://images.pexels.com/photos/931177/pexels-photo-931179.jpeg?w=700&h=700",
         },
         {
           plant_id: 2,
-          date_taken: "02/04/2026",
+          image_date: "02/04/2026",
           img_url:
             "https://images.pexels.com/photos/931177/pexels-photo-931180.jpeg?w=700&h=700",
         },
         {
           plant_id: 2,
-          date_taken: "02/08/2026",
+          image_date: "02/08/2026",
           img_url:
             "https://images.pexels.com/photos/931177/pexels-photo-931181.jpeg?w=700&h=700",
         },
@@ -352,7 +380,7 @@ describe("/api/plants/:plant_id/images", () => {
 
       images.forEach((image) => {
         expect(typeof image.plant_id).toBe("number");
-        expect(typeof image.date_taken).toBe("string");
+        expect(typeof image.image_date).toBe("string");
         expect(typeof image.img_url).toBe("string");
       });
     });
@@ -402,7 +430,7 @@ describe("/api/plants/:plant_id/logs", () => {
 
       logs.forEach((log) => {
         expect(typeof log.plant_id).toBe("number");
-        expect(typeof log.created_at).toBe("string");
+        expect(typeof log.log_date).toBe("string");
         expect(typeof log.body).toBe("string");
       });
     });
@@ -414,7 +442,7 @@ describe("/api/plants/:plant_id/logs", () => {
         .post("/api/plants/2/logs")
         .send({
           plant_id: 2,
-          created_at: new Date(1617102300000),
+          log_date: new Date(1617102300000),
           body: "Thorny deciduous tree producing clusters of white blossoms.",
         })
         .expect(201);
@@ -428,14 +456,14 @@ describe("/api/plants/:plant_id/logs", () => {
         .post("/api/plants/2/logs")
         .send({
           plant_id: 2,
-          created_at: new Date(1617102300000),
+          log_date: new Date(1617102300000),
           body: "Thorny deciduous tree producing clusters of white blossoms.",
         })
         .expect(201);
       const { log } = body;
 
       expect(typeof log.plant_id).toBe("number");
-      expect(typeof log.created_at).toBe("string");
+      expect(typeof log.log_date).toBe("string");
       expect(typeof log.body).toBe("string");
     });
   });
