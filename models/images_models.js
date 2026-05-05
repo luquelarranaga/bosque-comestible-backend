@@ -32,7 +32,7 @@ const removeImage = async (image_id) => {
 
 const fetchDisplayImages = async () => {
   const result = await db.query(
-    `SELECT DISTINCT ON (i.plant_id) i.image_id, i.plant_id, i.img_url, i.date_taken, p.species FROM images i JOIN plants p ON i.plant_id = p.plant_id ORDER BY i.plant_id, i.date_taken DESC;`,
+    `SELECT DISTINCT ON (i.plant_id) i.image_id, i.plant_id, i.img_url, i.image_date, p.species FROM images i JOIN plants p ON i.plant_id = p.plant_id ORDER BY i.plant_id, i.image_date DESC;`,
   );
   const { rows } = result;
   return rows;

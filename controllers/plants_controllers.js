@@ -25,7 +25,7 @@ const postPlant = async (req, res, next) => {
   const newPlant = req.body;
   try {
     const plant = await servicePostPlant(newPlant);
-    return res.status(201).send({ plant: plant });
+    return res.status(201).send({ newPlant: plant });
   } catch (err) {
     next(err);
   }

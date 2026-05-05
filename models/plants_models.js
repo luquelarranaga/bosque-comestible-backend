@@ -20,15 +20,58 @@ const fetchAllPlants = async (species) => {
 };
 
 const insertPlant = async (newPlant) => {
-  const result = await db.query(
-    `INSERT INTO plants (species, coordinates, created_at)
-    VALUES ($1, $2, $3)
-    RETURNING *
-    `,
-    [newPlant.species, newPlant.coordinates, newPlant.created_at],
-  );
-  const { rows } = result;
-  return rows[0];
+  const {
+    species,
+    coordinates,
+    created_at,
+    log_date,
+    body,
+    image_date,
+    img_url,
+  } = newPlant;
+
+  console.log("log date and body >> ", log_date, body);
+
+  const client = await db.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    const plantResult = await client.query(
+      `INSERT INTO plants (species, coordinates, created_at) 
+       VALUES ($1, $2, $3) RETURNING *`,
+      [species, coordinates, created_at],
+    );
+    const createdPlant = plantResult.rows[0];
+    const newPlantId = createdPlant.plant_id;
+
+    const logResult = await client.query(
+      `INSERT INTO logs (plant_id, body, log_date) 
+       VALUES ($1, $2, $3) RETURNING *`,
+      [newPlantId, body, log_date],
+    );
+
+    const imageQueries = img_url.map((url) => {
+      return client.query(
+        `INSERT INTO images (plant_id, img_url, image_date) 
+           VALUES ($1, $2, $3) RETURNING *`,
+        [newPlantId, url, image_date],
+      );
+    });
+    const imageResult = await Promise.all(imageQueries);
+
+    await client.query("COMMIT");
+    return {
+      plant: createdPlant,
+      log: logResult.rows[0],
+      images: imageResult.map((res) => res.rows[0]),
+    };
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
 };
 
 const fetchPlant = async (plant_id) => {
@@ -70,7 +113,7 @@ const deletePlant = async (plant_id) => {
 
 const fetchImages = async (plant_id) => {
   const result = await db.query(
-    `SELECT * FROM images WHERE plant_id = $1 ORDER BY date_taken DESC`,
+    `SELECT * FROM images WHERE plant_id = $1 ORDER BY image_date DESC`,
     [plant_id],
   );
   const { rows } = result;
@@ -80,12 +123,12 @@ const fetchImages = async (plant_id) => {
 const insertImages = async (newImages) => {
   const formattedImages = newImages.map((image) => [
     image.plant_id,
-    image.date_taken,
+    image.image_date,
     image.img_url,
   ]);
 
   const queryStr = format(
-    `INSERT INTO images (plant_id, date_taken, img_url) VALUES %L RETURNING *`,
+    `INSERT INTO images (plant_id, image_date, img_url) VALUES %L RETURNING *`,
     formattedImages,
   );
 
@@ -95,7 +138,7 @@ const insertImages = async (newImages) => {
 
 const fetchLogs = async (plant_id) => {
   const result = await db.query(
-    `SELECT * FROM logs WHERE plant_id = $1 ORDER BY created_at DESC`,
+    `SELECT * FROM logs WHERE plant_id = $1 ORDER BY log_date DESC`,
     [plant_id],
   );
   const { rows } = result;
@@ -104,8 +147,8 @@ const fetchLogs = async (plant_id) => {
 
 const insertLog = async (newLog) => {
   const result = await db.query(
-    `INSERT INTO logs (plant_id, created_at, body) VALUES ($1, $2, $3) RETURNING *`,
-    [newLog.plant_id, newLog.created_at, newLog.body],
+    `INSERT INTO logs (plant_id, log_date, body) VALUES ($1, $2, $3) RETURNING *`,
+    [newLog.plant_id, newLog.log_date, newLog.body],
   );
 
   const { rows } = result;
